@@ -1,0 +1,152 @@
+\clearpage
+\section{Participant Task Script}
+\label{app:task_script}
+
+This script guides the participant through \textbf{two specific scenarios} designed to test the full range of the system:
+
+\begin{enumerate}
+    \item \textbf{Task A (The Simple Meal):} Validates the "Single-Shot" low-friction flow.
+    \item \textbf{Task B (The Complex Meal):} Validates the "Agentic Logic" and voice interaction flow.
+\end{enumerate}
+
+\subsection*{System Setup \& Pre-Session Checklist}
+\begin{enumerate}
+    \item \textbf{Battery Check:} Ensure the smartphone is $>$50\% charge (camera and AI processing drain battery quickly).
+    \item \textbf{Audio/Visual Check:} Ensure screen brightness is at 100\% so the visual wave is clearly visible against glare (as audio feedback is minimal).
+    \item \textbf{Network:} Confirm the device is on a low-latency Wi-Fi network (essential for the "Agentic Logic" to respond quickly).
+    \item \textbf{Screen Setup:} Ensure the laptop/monitor is at eye level to simulate a dining experience, not flat on a table (which increases glare).
+    \item \textbf{Image Readiness:} Ensure the two meal images are ready to display on a laptop/tablet monitor.
+\end{enumerate}
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\subsection*{Participant Task Sheet: The "Digital Buffet" Session}
+
+\noindent\fbox{\parbox{\textwidth}{\textbf{READ ALOUD TO PARTICIPANT:}
+
+        "Welcome to the session. We are testing a new food logging app called 'Snap and Say'.
+
+        \textbf{Three quick rules:}
+        \begin{enumerate}
+            \item \textbf{I am not the designer.} You won't hurt my feelings if you say something is ugly or confusing. Please be brutally honest.
+            \item \textbf{Think Aloud.} As you use the app, please try to tell me what you are looking at. For example: 'I'm looking for the save button' or 'I'm wondering if it heard me.'
+            \item \textbf{This is a test of the app, not you.} If you get stuck, it helps us improve the software.
+        \end{enumerate}
+
+        Do you have any questions before we look at the first meal?"
+    }
+}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\subsection*{Task A: The Simple Meal (Practice)}
+
+\textit{Please look at the computer screen. It currently shows a plate of \textbf{Roasted Chicken and Vegetables}.}
+
+\subsubsection*{1. Open the App}
+
+\begin{itemize}
+    \item Take the smartphone and tap the \textbf{"New Meal"} button.
+\end{itemize}
+
+\subsubsection*{2. Capture the "Meal"}
+
+\begin{itemize}
+    \item Hold the phone about \textbf{30 cm (12 inches)} away from the computer screen.
+    \item \textit{Tip:} If the screen looks too bright or has wavy lines, move the phone back slightly.
+    \item Tap the \textbf{Camera Button} to take the picture.
+    \item Tap \textbf{"Use Photo"} to confirm the image preview.
+\end{itemize}
+
+\subsubsection*{3. The Voice Screen (Required Step)}
+
+\begin{itemize}
+    \item The app will now show the \textbf{Voice Recording} screen.
+    \item \textbf{Note:} You must pass through this screen for every meal.
+    \item Since this meal is simple and needs no explanation, simply tap the \textbf{"Upload"} button (without recording) to proceed.
+\end{itemize}
+
+\subsubsection*{4. Review the Result}
+
+\begin{itemize}
+    \item Wait a few seconds for the assistant to think.
+    \item Because this meal is easy to see, the assistant should show you the list (Chicken, Carrots, Potatoes) immediately.
+    \item Tap the green \textbf{"Save Log"} button to finish.
+\end{itemize}
+
+\textit{(Great job! Now we will try a harder one.)}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\subsection*{Task B: The Complex Meal (The Real Test)}
+
+\textit{The researcher will now change the image on the screen. It is now a \textbf{Mixed Green Salad}.}
+
+\subsubsection*{1. Capture and Upload}
+
+\begin{itemize}
+    \item Tap \textbf{"New Meal"} again.
+    \item Point the camera at the salad on the screen.
+    \item Tap the \textbf{Camera Button} and then \textbf{"Use Photo"}.
+    \item When the Voice Screen appears, tap \textbf{"Upload"} immediately to let the AI analyze the photo first.
+\end{itemize}
+
+\subsubsection*{2. The Assistant Needs Help}
+
+\begin{itemize}
+    \item \textit{Please wait.} This time, the assistant might be unsure because it cannot see if there is dressing or oil hidden in the salad.
+    \item \textbf{Watch the screen:} The assistant will pause and ask you a question (e.g., \textit{"Is there any dressing on this?"}).
+\end{itemize}
+
+\subsubsection*{3. Answer with Your Voice}
+
+\begin{itemize}
+    \item We designed this app so you don't have to type.
+    \item \textbf{Step 1:} Tap the \textbf{Microphone Button ONCE} to start listening.
+    \item \textbf{Step 2:} Speak clearly to the phone: \textit{"Yes, it has Italian dressing."}
+    \item \textbf{Step 3:} Tap the \textbf{Microphone Button AGAIN} to stop recording.
+    \item The wave on the screen will stop moving.
+\end{itemize}
+
+\subsubsection*{4. Finish}
+
+\begin{itemize}
+    \item The assistant will update the list to include the dressing.
+    \item Tap \textbf{"Save Log"}.
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\subsection*{End of Session}
+
+Thank you! Please hand the device back to the researcher.
+We will now ask you a few short questions about how easy or difficult that felt.
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{Researcher Protocol: "Digital Buffet" Checklist}
+
+\textbf{Setup for Task B (Complex):}
+
+\begin{itemize}
+    \item \textbf{Image Selection:} Display a salad image specifically chosen from the "Complex" class (e.g., >3 ingredients, hidden density).
+    \item \textbf{System Check:} Ensure the backend confidence threshold is active so the question generation node is triggered.
+\end{itemize}
+
+\textbf{Critical Observations (Mark Yes/No):}
+
+\begin{itemize}
+    \item \textbf{Glare Management:} Did the user struggle to get a clear photo of the screen?
+    \item \textbf{Flow Confusion:} In Task A, did the user understand they had to tap "Upload" to skip the voice recording?
+    \item \textbf{Motor Control:} Did the \textbf{"Tap-to-Toggle"} (tap once) work intuitively, or did they try to hold the button down?
+\end{itemize}
+
+\textbf{Next Step:} Administer the Survey.

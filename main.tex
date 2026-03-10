@@ -1,25 +1,199 @@
-\documentclass[12pt, a4paper]{report}
+\documentclass[12pt, a4paper, openany]{report}
 
+% --- ENCODING AND FONTS ---
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{amsmath}
-\usepackage{booktabs}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}         % Improved typography
 
-\title{Consolidated Master Thesis: Snap and Say}
-\author{Fabian W. N. Schreuder}
+% --- MATHEMATICS ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% --- GRAPHICS AND FIGURES ---
+\usepackage{graphicx}
+\usepackage{float}             % For precise figure placement [H]
+\graphicspath{{figures/}}
+
+% --- TABLES ---
+\usepackage{booktabs}          % Professional-quality table rules
+\usepackage{tabularx}          % Tables with adjustable-width columns
+\usepackage{longtable}         % Multi-page tables
+
+% --- BIBLIOGRAPHY ---
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+% --- URLS AND HYPERLINKS ---
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue,
+    pdftitle={Snap and Say: Evidence Mapping and Artifact Design for AI-Mediated Dietary Assessment in Older Adults},
+    pdfauthor={Fabian W. N. Schreuder}
+}
+
+% --- CROSS-REFERENCING ---
+\usepackage{cleveref}
+
+% --- QUOTATION HANDLING ---
+\usepackage{csquotes}
+
+% --- SURVEY DEFINITIONS (for Phase 2 appendices) ---
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcommand{\surveyrating}[2]{%
+    \vspace{0.5em}
+    \begin{center}
+        \begin{tabularx}{1.0\linewidth}{Y Y Y Y Y}
+            \textbf{1}  & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5}  \\
+            (\mbox{#1}) &            &            &            & (\mbox{#2})
+        \end{tabularx}
+    \end{center}
+    \vspace{1.5em}
+}
+\newcommand{\surveyratingmid}[3]{%
+    \vspace{0.5em}
+    \begin{center}
+        \begin{tabularx}{1.0\linewidth}{Y Y Y Y Y}
+            \textbf{1}  & \textbf{2} & \textbf{3}  & \textbf{4} & \textbf{5}  \\
+            (\mbox{#1}) &            & (\mbox{#2}) &            & (\mbox{#3})
+        \end{tabularx}
+    \end{center}
+    \vspace{1.5em}
+}
+
+% --- PAGE GEOMETRY ---
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+
+% --- CHAPTER/SECTION FORMATTING ---
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+    {\normalfont\Large\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{30pt}{20pt}
+
+% --- DOCUMENT METADATA ---
+\title{%
+    \textbf{Snap and Say}\\[0.5em]
+    \large Evidence Mapping and Artifact Design for\\
+    AI-Mediated Dietary Assessment in Older Adults\\[1em]
+    \normalsize MSc Thesis --- Data Science for Food and Health\\
+    Wageningen University \& Research
+}
+\author{Fabian W. N. Schreuder\\[0.5em]
+    \small Supervisors: Yamine Bouzembrak \& Bedir Tekinerdogan\\
+    \small Information Technology Group, WUR
+}
 \date{\today}
 
+% ============================================================
 \begin{document}
+% ============================================================
 
 \maketitle
 
+% --- ABSTRACT ---
+\begin{abstract}
+
+    \noindent
+    Accurate dietary assessment is essential for managing chronic conditions in older adults, yet clinical gold standards such as the USDA Automated Multiple-Pass Method impose cognitive and physical burdens that preclude longitudinal use. Conversely, passive computer-vision approaches reduce friction but sacrifice the clinical fidelity required when hidden variables---preparation methods, cooking oils, portion ambiguities---determine nutritional outcomes. This tension constitutes the \emph{friction-fidelity paradox} addressed by this thesis.
+
+    The research follows a two-phase design. \textbf{Phase~1} employs a PRISMA-ScR scoping review to map the translational evidence on AI applications in geriatric nutrition. Analysis of 25 eligible studies reveals a nascent field: $92\%$ of systems remain at prototype or pilot stages, $84\%$ rely on private datasets, and a systematic mismatch persists between system design and the needs of older adults.
+
+    \textbf{Phase~2} applies the Design Science Research Methodology to design, develop, and evaluate \emph{Snap and Say}, a multimodal agentic AI system that operationalises threshold-based routing to resolve the paradox. The artifact's core architecture comprises (1)~a Deterministic Complexity Scoring Engine that computes an auditable, non-linear complexity score from LLM-derived ambiguity levels and domain-curated food class metadata; (2)~a Clinical Threshold Routing Module that compares this score against a configurable clinical threshold; and (3)~a truncated adaptation of the AMPM, bounded by a safety budget of two clarification rounds.
+
+    Simulated benchmarking ($N=500$ items) demonstrates that the agentic clarification cycles reduce caloric estimation mean absolute error by $30.6\%$ on complex items relative to a single-shot baseline, with a $92\%$ True Negative Rate on simple items confirming that the routing architecture successfully withholds intervention where it would impose burden without commensurate clinical value. A human-in-the-loop evaluation with older adults ($N=19$, Age $\geq 65$) confirms low perceived complexity and sustained willingness to engage with the multimodal interface.
+
+    Together, the two phases demonstrate that the depth of conversational inquiry can be calibrated to the clinical stakes of each meal entry---asking more when the data demand it, and asking nothing when they do not.
+
+    \bigskip
+    \noindent\textbf{Keywords:} Agentic AI, Dietary Assessment, Geriatric Nutrition, Design Science Research, Scoping Review, Multimodal Interaction, Human-Computer Interaction
+
+\end{abstract}
+
+% --- FRONT MATTER ---
 \tableofcontents
+\listoffigures
+\listoftables
 
-\part{Phase 1}
-% \input{../msc-thesis-phase1/...}
+% ============================================================
+%  CHAPTER 1: INTRODUCTION
+% ============================================================
+\chapter{Introduction}
+\label{ch:introduction}
+\input{chapters/ch1_introduction}
 
-\part{Phase 2}
-% \input{../msc-thesis-phase2/...}
+% ============================================================
+%  CHAPTER 2: LITERATURE REVIEW (SCOPING REVIEW)
+% ============================================================
+\chapter{Literature Review: Scoping Review of AI in Geriatric Nutrition}
+\label{ch:literature}
+% Section labels used in this chapter:
+%   \label{sec:results}         -> 2.3 Results
+%   \label{sec:discussion-review} -> 2.4 Discussion of Review Findings
+%   \label{sec:implications}    -> 2.5 Implications for System Design
+%   \label{sec:gap-to-arch}     -> 2.5.1
+\input{chapters/ch2_literature_review}
 
+% ============================================================
+%  CHAPTER 3: METHODOLOGY
+% ============================================================
+\chapter{Methodology}
+\label{ch:methodology}
+% Section labels used in this chapter:
+%   \label{sec:problem-id}      -> 3.2 Problem Identification
+%   \label{sec:ampm-burden}     -> 3.2.1 The Burden of Dietary Assessment
+%   \label{sec:objectives}      -> 3.3.2 Design Objectives
+\input{chapters/ch3_methodology}
+
+% ============================================================
+%  CHAPTER 4: ARTIFACT DESIGN
+% ============================================================
+\chapter{Artifact Design --- Snap and Say}
+\label{ch:artifact}
+% Section labels used in this chapter:
+%   \label{sec:agent-layer}     -> 4.1.3 Agent Layer
+%   \label{sec:input-pipeline}  -> 4.3 Multimodal Input Pipeline
+%   \label{sec:threshold-routing} -> 4.4.1 Clinical Threshold Routing
+%   \label{sec:interface-design} -> 4.6 Geriatric-Centric Interface Design
+\input{chapters/ch4_artifact}
+
+% ============================================================
+%  CHAPTER 5: EVALUATION
+% ============================================================
+\chapter{Evaluation}
+\label{ch:evaluation}
+% Section labels used in this chapter:
+%   \label{sec:threshold-calibration} -> 5.2 Calibration of Routing Thresholds
+%   \label{sec:digital-buffet}  -> 5.3 User Experience: Digital Buffet Protocol
+\input{chapters/ch5_evaluation}
+
+% ============================================================
+%  CHAPTER 6: DISCUSSION
+% ============================================================
+\chapter{Discussion}
+\label{ch:discussion}
+\input{chapters/ch6_discussion}
+
+% ============================================================
+%  CHAPTER 7: CONCLUSION
+% ============================================================
+\chapter{Conclusion}
+\label{ch:conclusion}
+\input{chapters/ch7_conclusion}
+
+% ============================================================
+%  BIBLIOGRAPHY
+% ============================================================
+\bibliography{references}
+
+% ============================================================
+%  APPENDICES
+% ============================================================
+\appendix
+\input{chapters/appendices}
+
+% ============================================================
 \end{document}

@@ -28,7 +28,7 @@ We utilise the Peffers process model, which structures the research into six pha
 
 ### 3.2.1 The Burden of Dietary Assessment
 
-Accurate dietary assessment is a fundamental pillar of nutritional epidemiology and clinical management for chronic metabolic conditions, such as diabetes and cardiovascular disease \citep{willettNutritionalEpidemiology2012,evertNutritionTherapyAdults2019}. Traditionally, methods like the 24-hour dietary recall and food frequency questionnaires have been employed to capture nutritional data. The AMPM represents the gold standard in reducing bias and improving the precision of energy intake reporting \citep{moshfeghUSDepartmentAgriculture2008}. However, these rigorous methods are inherently burdensome. They rely heavily on patient recall, subjective judgment of portion sizes, and significant administrative overhead, rendering continuous longitudinal tracking impractical for daily clinical care \citep{shimDietaryAssessmentMethods2014}.
+Accurate dietary assessment is a fundamental pillar of nutritional epidemiology and clinical management for chronic metabolic conditions, such as diabetes and cardiovascular disease \citep{willettNutritionalEpidemiology2012,evertNutritionTherapyAdults2019}. Traditionally, methods like the 24-hour dietary recall and food frequency questionnaires have been employed to capture nutritional data. The AMPM represents the gold standard in reducing bias and improving the precision of energy intake reporting \citep{moshfeghUSDepartmentAgriculture2008,blantonUSDAAutomatedMultiplePass2006}. However, these rigorous methods are inherently burdensome. They rely heavily on patient recall, subjective judgment of portion sizes, and significant administrative overhead, rendering continuous longitudinal tracking impractical for daily clinical care \citep{shimDietaryAssessmentMethods2014}.
 
 <!-- [OVERLAP: AMPM methodology description]
      This is now the FIRST full treatment of AMPM in the consolidated thesis.
@@ -92,23 +92,19 @@ With the problem identified, the objectives specified, and the evaluation strate
 
 ## 3.5 Ethical Considerations
 
-<!-- NEW SECTION — addresses [GAP: Ethical considerations thin across both phases]
-     This is skeletal — student must complete with:
-     - IRB/ethics committee approval details
-     - Informed consent procedure
-     - Data protection measures (de-identified auth, managed ephemerality)
-     - HIPAA/GDPR considerations
-     [CITATION GAP: Privacy/regulatory compliance — no HIPAA, GDPR citations yet] -->
+<!-- [GAP: Ethical considerations] — RESOLVED.
+     GDPR Art. 25 and Art. 5(1)(c,e) cited. WUR-REC governance model described.
+     No formal IRB needed — supervisor-delegated oversight per WUR policy. -->
 
 The research involved human participants (older adults aged 65 and over) and the processing of dietary data, necessitating careful attention to ethical governance.
 
 **Informed consent.** All participants provided written informed consent prior to participation in the Digital Buffet evaluation. The consent form (Appendix G) described the study procedures, the voluntary nature of participation, and the right to withdraw at any time without consequence.
 
-**De-identified authentication.** The system implements a de-identified anonymous sign-in pattern. Each participant receives a persistent UUID with no associated personally identifiable information, ensuring that dietary data cannot be traced to individual participants.
+**De-identified authentication.** The system implements a de-identified anonymous sign-in pattern. Each participant receives a persistent UUID with no associated personally identifiable information, ensuring that dietary data cannot be traced to individual participants. This design operationalises the principle of *data protection by design and by default* mandated by the General Data Protection Regulation \citep[Article 25]{europeanparliamentRegulationEU20162016}, minimising the personal data processed to that which is strictly necessary for the research purpose.
 
-**Managed ephemerality.** While the deterministic analysis results are retained for research purposes, raw audio and image files are subject to managed ephemerality---retained only as long as necessary for clinical review, then purged to mitigate long-term re-identification risks.
+**Managed ephemerality.** While the deterministic analysis results are retained for research purposes, raw audio and image files are subject to managed ephemerality---retained only as long as necessary for clinical review, then purged to mitigate long-term re-identification risks. This retention policy aligns with the GDPR principles of *data minimisation* and *storage limitation* \citep[Article 5(1)(c,e)]{europeanparliamentRegulationEU20162016}, which require that personal data be adequate, relevant, and limited to what is necessary, and kept in identifiable form no longer than required.
 
-**[TODO: Student to add IRB/ethics committee approval reference, GDPR/privacy regulation citations, and any institutional review details]**
+**Ethical governance.** This research was conducted as a Master's thesis at Wageningen University \& Research (WUR). Under WUR policy, individual student thesis projects fall outside the formal scope of the WUR Research Ethics Committee (WUR-REC); ethical oversight is instead delegated to the supervising examiner, who is responsible for ensuring the ethical conduct of the research throughout the proposal and execution phases. The study design, informed consent procedure, and data handling measures described above were reviewed and approved by the thesis supervisor prior to data collection.
 
 ---
 

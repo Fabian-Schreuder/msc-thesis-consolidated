@@ -63,6 +63,18 @@ The most consequential direction for future research is longitudinal field deplo
 
 The prevailing assumption in dietary assessment technology has been that clinical precision and patient usability exist in zero-sum opposition. This thesis provides evidence to the contrary. By interposing a deterministic, auditable scoring layer between unstructured multimodal input and probabilistic generative reasoning, the Snap and Say artifact demonstrates that the depth of conversational inquiry can be calibrated to the clinical stakes of each individual meal entry---asking more when the data demand it, and asking nothing when they do not. The result is an architecture that respects both the clinical imperative for nutritional fidelity and the human imperative for frictionless interaction, offering a foundational step toward continuous dietary monitoring that serves the patients who need it most without overwhelming them in the process.
 
+## 7.6 Data and Code Availability
+
+In accordance with the principles of reproducible research and the open science mandate for Design Science Research in health informatics, the complete software artifact has been made publicly available.
+
+The "Snap and Say" source code repository is archived at \url{https://github.com/Fabian-Schreuder/snapandsay}. This repository contains the full executable artifact, including:
+1. The progressive web application (frontend).
+2. The asynchronous API backend.
+3. The LLM-orchestrated LangGraph agent layer, containing the exact system prompt iterations and the deterministic complexity scoring engine.
+4. The Prompt Optimization benchmark scripts and historical execution logs used to derive the findings in Chapter 4 and Chapter 5.
+
+Due to the constraints of the informed consent framework under which the study was conducted, the raw clinical interview transcripts and raw multimodal captures from the human-in-the-loop Phase 2 trials ($N=19$) are not publicly archived, but may be made available upon reasonable request to the corresponding institutions.
+
 ---
 
 <!-- MERGE ANNOTATIONS SUMMARY FOR CH 7:

@@ -1,0 +1,233 @@
+% Chapter 4: Artifact Design --- Snap and Say
+%
+% MERGE NOTE: This chapter is Phase 2's Artifact sections (§3.1--§3.6), verbatim.
+%      This is the technical heart of the thesis. Sacred fabric.
+%      [TECHNICAL PRESERVATION] flags apply throughout --- the technology IS the contribution.
+%
+%      Changes:
+%      1. Section numbering adjusted for chapter context
+%      2. AMPM references point back to Ch 3 (first definition) rather than re-explaining
+%      3. [OVERLAP: AMPM methodology description] --- Phase 2 Artifact §3.4 describes the SOFTWARE
+%         ADAPTATION of AMPM. The five-step protocol explanation is truncated here; full introduction
+%         is in Ch 3.2.1. Only the mapping of steps to software nodes is preserved here.
+%      4. All [TECHNICAL PRESERVATION] content preserved exactly as written
+
+% [TONE HARMONIZED: Chapter-opening transition inserted --- connects design objectives
+%      (Ch 3) to implementation (Ch 4) within the DSR design cycle.]
+
+This chapter presents the instantiation of the design objectives formalised in Chapter~\ref{ch:methodology}. Each subsystem of the Snap and Say architecture addresses one or more of the six objectives, and each architectural decision can be traced back to a specific gap identified in the scoping review (Section~\ref{sec:implications}). The chapter is organised by subsystem to reflect the artifact's modular decomposition.
+
+\section{System Architecture Overview}
+
+The Snap and Say artifact is realised as a client-server web application composed of four principal subsystems---three independently deployed units and one logically separated layer: a progressive web application (PWA) front-end, a Python API server, an LLM-orchestrated agent layer co-hosted within the API server, and a managed relational database. Each subsystem addresses a distinct concern identified in the design objectives (Section~\ref{sec:objectives}), yet cross-cutting requirements---streaming feedback, de-identified authentication, and clinical configurability---shape the communication patterns that bind them.
+
+This section provides a top-level architectural description of the instantiated artifact, situating the subsystems within Hevner et al.'s \citep{hevnerDesignScienceInformation2004} three-cycle view of Design Science Research: the \emph{relevance cycle} (user-facing interaction), the \emph{design cycle} (the engineered artifact), and the \emph{rigour cycle} (methodological grounding). The architecture is designed to resolve the friction-fidelity paradox identified in Section~\ref{sec:problem-id}: every subsystem boundary reflects a deliberate trade-off between minimising user burden and maximising clinical data quality.
+
+% [Figure: Reference architecture of Snap and Say]
+
+\subsection{Front-End: Progressive Web Application}
+
+% [TRANSLATED: Next.js -> reactive component-based PWA framework; Vercel -> cloud-native edge deployment platform.
+%      Rationale: The specific framework and hosting platform are vehicles for delivering the PWA.
+%      The contribution is the multimodal input fusion and streaming feedback architecture, not the framework choice.]
+
+The user-facing layer is a progressive web application (PWA) built on a reactive component-based framework (Next.js) and deployed to a cloud-native edge platform (Vercel), enabling cross-device accessibility without app-store installation barriers --- a deployment characteristic directly motivated by the translational gap identified in Section~\ref{sec:gap-to-arch}. Its primary responsibility is to mediate the multimodal input fusion specified in Objective 6: users capture a meal photograph via the device camera and, optionally, provide a concurrent voice description through the browser's native audio capture API. Both media streams are transmitted to the backend as binary objects, decoupling the front-end from any nutritional reasoning. During analysis, the interface subscribes to a Server-Sent Events (SSE) channel that relays structured agent events, enabling the user to observe the agent's reasoning process in real time rather than confronting a silent loading state. This streaming architecture addresses the established two-second tolerance threshold for perceived system responsiveness \citep{nahStudyTolerableWaiting2004}.
+
+% [TRANSLATED: Supabase Auth -> managed authentication service implementing de-identified sign-in.
+%      Rationale: The specific authentication provider is a vehicle. The contribution is the
+%      de-identified anonymous sign-in pattern itself.]
+%      [PRIVACY GAP: RESOLVED --- GDPR Art. 25 cited inline.]
+
+Authentication follows a \emph{de-identified anonymous sign-in} pattern managed by a cloud-hosted authentication service (Supabase Auth). Each participant receives a persistent UUID with no associated personally identifiable information, operationalising the GDPR principle of data protection by design \citep[Article 25]{europeanparliamentRegulationEU20162016} and satisfying the privacy requirements of clinical research while maintaining session continuity for longitudinal dietary tracking.
+
+\subsection{Back-End: API Server}
+
+% [TRANSLATED: FastAPI -> asynchronous Python API framework with native streaming support;
+%      Railway -> managed cloud platform supporting persistent server processes.
+%      Rationale: The specific framework and hosting platform are vehicles. The contribution is
+%      the streaming event architecture and the stateful agent graph it serves.]
+
+The backend is an asynchronous Python API server (FastAPI) deployed on a managed cloud platform (Railway) selected for its support of persistent processes---a requirement imposed by the stateful nature of the agent graph. The API layer exposes versioned REST endpoints for dietary log management, user authentication verification, and data export, while a dedicated SSE endpoint streams agent events to the front-end.
+
+\subsection{Agent Layer: LangGraph State Graph}
+\label{sec:agent-layer}
+
+% [TECHNICAL PRESERVATION: Directed state graph architecture]
+% [CORE NOVELTY: Agentic AI architecture for dietary assessment]
+
+The core intellectual contribution of the artifact resides in the agent layer, implemented as a directed state graph using the LangGraph framework \citep{chaseLangChain2022}. The graph encodes the three-phase ordering mandated by Objective 5---semantic resolution before quantitative clarification---as a topological invariant of its node structure. The numbered nodes correspond to five stages:
+
+\begin{enumerate}
+    \item \textbf{Analysis.} The entry node consumes the multimodal input and invokes a large language model to produce structured nutritional estimates, including per-item confidence scores and integer ambiguity levels along three orthogonal dimensions (hidden ingredients, invisible preparation, and portion ambiguity).
+
+    \item \textbf{Semantic Gatekeeper.} A dedicated node evaluates whether any reported food item is taxonomically unbounded---an ``umbrella term'' whose referent is nutritionally unconstrained. When such terms are detected, the agent interrupts the flow and requests categorical clarification from the user before any quantitative assessment is attempted. This node operationalises Objective 3 by consulting a curated Food Class Registry.
+
+    \item \textbf{Conditional Routing.} A decision edge evaluates three criteria in strict priority order: (a) mandatory override flags from the registry, (b) the deterministic complexity score $C$ computed against the session-specific clinical threshold $\tau$ (Objectives 1 and 2), and (c) a standard confidence gate.
+
+    \item \textbf{AMPM Subgraph.} When routing directs the flow toward clarification, an embedded subgraph modelled after the USDA Automated Multiple-Pass Method (described in Section~\ref{sec:ampm-burden}) conducts a targeted detail cycle. Rather than interrogating every dimension equally, the cycle prioritises the \emph{dominant factor}. A safety budget of two clarification rounds enforces Objective 4.
+
+    \item \textbf{Finalisation.} The terminal node persists the validated nutritional data to the database and closes the SSE stream.
+\end{enumerate}
+
+\subsection{Data Layer: Managed Relational Database}
+
+% [TRANSLATED: Supabase PostgreSQL -> managed, encrypted relational database.
+%      Rationale: The specific database provider is a vehicle. The contribution is the schema
+%      design separating clinical metrics from session metadata.]
+%      [PRIVACY GAP: RESOLVED --- GDPR Art. 32 cited inline with encryption and access control.]
+
+All dietary records are persisted in a managed, encrypted relational database (Supabase-hosted PostgreSQL) that provides encryption at rest and role-based access control, aligning with the GDPR requirement for appropriate technical and organisational measures to ensure a level of security appropriate to the risk \citep[Article 32]{europeanparliamentRegulationEU20162016}. The database schema separates computed nutritional metrics from session metadata, enabling researchers to query evaluation metrics without accessing raw user interactions.
+
+\subsection{Architectural Rationale}
+
+The decomposition into four subsystems reflects a deliberate mapping between design objectives and system boundaries. The front-end isolates input acquisition (Objective 6) from clinical reasoning; the API server enforces schema integrity; the agent layer encapsulates the entire friction-fidelity control policy (Objectives 1--5); and the data layer preserves the evidentiary record required for summative evaluation.
+
+\section{Dynamic Complexity Scoring and Agent Routing}
+
+% SOURCE: Phase 2 Artifact §3.2. Verbatim.
+%      [TECHNICAL PRESERVATION: Deterministic Complexity Scoring Engine]
+%      [TECHNICAL PRESERVATION: Three-tier routing policy]
+
+\subsection{Inputs to the Complexity Calculator}
+
+The scoring pipeline operates on two categories of input. First, the LLM produces \emph{ambiguity levels} to systematically trigger selective clarification \citep{kuhnCLAMSelectiveClarification2023}. These levels quantify uncertainty along three orthogonal dimensions, each rated on an integer scale from 0 to 3: (i) \textbf{Hidden Ingredients} ($L_i$), (ii) \textbf{Invisible Preparation} ($L_p$), and (iii) \textbf{Portion Ambiguity} ($L_v$).
+
+Second, the system consults a \emph{Food Class Registry}---a curated, YAML-based knowledge base that maps food names and aliases to predefined risk profiles. Each risk profile encodes dimension-specific weights ($w_i$, $w_p$, $w_v$), a semantic penalty ($P_{\text{sem}}$), and a mandatory clarification flag.
+
+\subsection{The Deterministic Scoring Formula}
+
+\[
+    C = \sum_{d \in \{i,\, p,\, v\}} w_d \cdot L_d^{2} + P_{\text{sem}}
+\]
+
+The quadratic term $L^2$ ensures that moderate ambiguity (level 2) contributes four times more than low ambiguity (level 1), producing a non-linear penalty curve that disproportionately flags meals whose nutritional content is genuinely uncertain. The system additionally identifies the \emph{dominant factor}---the dimension contributing the largest weighted-square term---which steers clarification question generation.
+
+\subsection{Routing Logic Within the State Graph}
+
+The computed score $C$ drives a three-tier conditional routing policy:
+
+\begin{enumerate}
+    \item \textbf{Mandatory override.} If the matched food class carries a \texttt{mandatory\_clarification} flag, the system unconditionally routes to the clarification subgraph.
+
+    \item \textbf{Clinical threshold override.} The score $C$ is compared against a configurable per-session threshold $\tau$ (default $\tau = 15.0$). If $C > \tau$, the system enters the clarification subgraph. Critically, $\tau$ can be lowered for clinically sensitive cohorts \citep{evertNutritionTherapyAdults2019}.
+
+    \item \textbf{Standard confidence check.} Meals whose average per-item confidence exceeds 0.85 are routed directly to database insertion; those below enter the clarification subgraph.
+\end{enumerate}
+
+A safety budget of at most two clarification rounds prevents unbounded questioning.
+
+\section{Multimodal Input Pipeline}
+\label{sec:input-pipeline}
+
+% SOURCE: Phase 2 Artifact §3.3. Verbatim.
+
+The dietary assessment process is initiated through a multimodal input pipeline designed to satisfy Objective 6 (Multimodal Input Fusion). By fusing visual and acoustic data, the architecture compensates for the ambiguity inherent in isolated modalities.
+
+% [Figure: Sequence diagram of multimodal input pipeline]
+
+\subsection{Input Capture and Transmission}
+
+Users capture a photograph and/or record a natural-language description. The PWA does not perform local processing. Both media are uploaded to a secure storage bucket. Raw media blobs are subject to managed ephemerality.
+
+\subsection{Audio Transcription}
+
+% [TRANSLATED: OpenAI Whisper -> automatic speech recognition (ASR) service.
+%      Rationale: The specific ASR provider is a vehicle. The contribution is the multimodal
+%      fusion pipeline that integrates speech transcription with visual analysis.
+%      The language configuration capability is the clinically relevant feature.]
+
+The audio is processed by an automatic speech recognition service (OpenAI Whisper) to generate a text transcript. The service incorporates a language parameter (defaulting to Dutch, reflecting the target population), enabling locale-specific transcription that accommodates the linguistic context of the target population.
+
+\subsection{LLM Fusion and Execution}
+
+The LLM service retrieves the image blob and encodes it as a base64 data URI. This encoded image, alongside the Whisper-generated transcript and a strictly typed system prompt, is packaged into a unified message structure. The prompt instructs the reasoning engine to prioritise explicit vocal assertions when resolving direct contradictions with the visual evidence.
+
+Execution is handled via a streaming protocol. Partial tokens are broadcast over the SSE connection to the front-end, satisfying the two-second threshold requirement \citep{nahStudyTolerableWaiting2004}. Streaming the agent's reasoning trace serves a critical psychological function in HCI: exposing the reasoning process fosters user trust and mitigates algorithmic aversion.
+
+\section{Dynamic Routing and the AMPM Subgraph}
+
+% SOURCE: Phase 2 Artifact §3.4. Verbatim.
+%      [CORE NOVELTY: AMPM-to-software-agent translation]
+%      [OVERLAP: AMPM methodology description] --- The five-step AMPM is introduced in Ch 3.2.1.
+%      Here we describe only the SOFTWARE ADAPTATION mapping. The full protocol
+%      explanation is NOT repeated; instead, we reference Section 3.2.1.
+
+The core innovation lies in the ability to dynamically modulate the depth of dietary inquiry based on the clinical sensitivity of the meal entry. This section describes the conditional routing mechanism and the truncated adaptation of the USDA AMPM (introduced in Section~\ref{sec:ampm-burden}).
+
+\subsection{Clinical Threshold Routing}
+\label{sec:threshold-routing}
+
+Following the initial multimodal analysis and semantic resolution (Objective 5), the execution flow reaches the conditional router. This routing node evaluates the deterministic complexity score against the configurable threshold $\tau$.
+
+The router implements an architectural pattern this thesis terms \emph{threshold-gated deferral}. If $C \leq \tau$ and no mandatory overrides are triggered, the agent accepts the probabilistic risk that the initial estimates are clinically sufficient. If $C > \tau$, the flow is routed into the AMPM subgraph.
+
+\subsection{The AMPM Adaptation State Graph}
+
+% [OVERLAP: AMPM five-step description] --- Truncated here. Full protocol in Ch 3.2.1.
+%      Only the step-to-node mapping is preserved as it constitutes the novel translation.
+
+The AMPM subgraph consists of two primary nodes: the \textbf{Detail Cycle} and the \textbf{Final Probe}. This architecture represents a deliberate translation and truncation of the traditional five-step clinician-led AMPM, mapping its structured inquiry approach onto an asynchronous, conversational software agent. The mapping accounts for all five traditional steps:
+
+\begin{itemize}
+    \item Steps 1 (Quick List) and 3 (Time and Occasion) are satisfied passively by the multimodal input pipeline (Section~\ref{sec:input-pipeline}) and the PWA's temporal metadata, respectively.
+    \item Step 2 (Forgotten Foods) and Step 4 (Detail Cycle) are instantiated explicitly as LangGraph nodes.
+    \item Step 5 (Final Probe) is conditionally merged into the forgotten foods pass.
+\end{itemize}
+
+\begin{enumerate}
+    \item \textbf{The Detail Cycle Node.} An iterative clarification engine that parses the complexity score to identify the food item contributing the highest variance. The LLM generates a single, highly targeted clarification question aimed at resolving the dominant ambiguity.
+
+    \item \textbf{The Final Probe Node.} If the Detail Cycle proves inconclusive, the flow transitions to a generic trailing inquiry mirroring the ``Forgotten Foods'' pass.
+\end{enumerate}
+
+\subsection{The Safety Budget as a Design Proposition}
+
+The subgraph enforces a strict safety budget ($N_{max}=2$). Within the DSR framework, $N_{max}$ is not merely a hardcoded parameter but an explicitly testable design proposition hypothesising the optimal equilibrium point between patient burden and data yield.
+
+If $N_{max}$ is exhausted and $C$ remains above $\tau$, the router triggers a fail-safe mechanism, flagging the record for manual clinical review.
+
+\section{Prompt Engineering and Model Configuration}
+
+% SOURCE: Phase 2 Artifact §3.5. Verbatim.
+%      [TRANSLATED: Pydantic -> typed schema validation library enforcing structural determinism;
+%      GPT-4o -> multimodal large language model.
+%      Rationale: The specific validation library and LLM are vehicles. The contribution is the
+%      prompt engineering strategy (persona stability, graceful degradation) and the architectural
+%      decision to enforce structural determinism through typed schemas rather than post-hoc parsing.]
+
+To ensure appropriate interaction with a geriatric user base, the system relies on rigorous prompt engineering to enforce persona stability. A meta-prompt conditions the model to adopt a supportive, non-clinical tone. The agent operates under ``Graceful Degradation'' instructions to prevent refusal responses. The context window is scoped strictly to the current meal session to mitigate hallucination.
+
+\subsection{Iterative Prompt Optimisation for MAE Reduction}
+
+% INCORPORATED: Details from docs/prompt-engineering-iterations.md
+
+The performance of the reasoning engine was refined through an iterative prompt engineering protocol aimed at reducing the Mean Absolute Error (MAE) of caloric estimations. Using an Automated Prompt Optimization System developed as part of the artifact, variants were systematically benchmarked against a fixed subset of the Nutrition5K dataset.
+
+The \textbf{Baseline Prompt (Iteration 0)} provided general directives to identify food items and estimate quantities, relying on the model's latent knowledge. This approach yielded a baseline caloric MAE of 54.16 kcal but exhibited severe underestimation of calorie-dense meals (e.g., misestimating a high-fat sausage by 185 kcal).
+
+To correct this, \textbf{Iteration 1 (Verbose Methodology)} introduced a detailed, step-by-step estimation procedure specifying physical analogies for portion sizes (e.g., ``fist-sized = $\sim$1 cup'') and macronutrient caloric densities. Contrary to expectations, this verbose instruction set degraded performance, resulting in a 57\% regression in caloric MAE (85.16 kcal). The complexity of the instructions appeared to interfere with the model's deductive reasoning pathways.
+
+\textbf{Iteration 2 (Explicit Densities)} resolved this by simplifying the prompt structure and supplying a high signal-to-noise heuristic mapping of common food categories to their caloric density bounds per 100g (e.g., ``Sausage/processed meat: 250-350 kcal/100g (HIGH FAT)''). Furthermore, the prompt instituted a conservative clinical bias: ``When uncertain, estimate HIGHER rather than lower.'' This iteration achieved a 12\% improvement in caloric MAE relative to the baseline (47.72 kcal) and reduced severe underestimations, proving that targeted caloric heuristics paired with structural simplicity outperform verbose methodological instructions.
+
+\subsection{Structural Determinism}
+
+The system enforces strict syntactic correctness using typed schema validation (Pydantic), requiring a JSON structure comprising a title, an item list (name, quantity, confidence), and a synthesis comment. The system maintains the default temperature ($T=1.0$) for the multimodal large language model (GPT-4o at time of evaluation). The typed schema validation handles structural determinism, allowing the higher temperature to generate naturalistic conversational variations without risking structural parse failures downstream.
+
+\section{Geriatric-Centric Interface Design}
+\label{sec:interface-design}
+
+% SOURCE: Phase 2 Artifact §3.6. Verbatim.
+%      [ACCESSIBILITY GAP: RESOLVED --- WCAG 2.1 Level AA cited, with specific guideline
+%      references (2.1 Keyboard Accessible, 1.3 Adaptable, 1.4 Distinguishable) mapped
+%      to the design features.]
+
+The frontend implementation addresses physical and sensory limitations identified in the problem analysis, guided by the Web Content Accessibility Guidelines \citep{w3cWebContentAccessibility2023} at the AA conformance level. The voice input mechanism utilises a ``Tap-to-Toggle'' interaction model rather than ``Push-to-Talk,'' specifically accommodating users with reduced fine motor skills (WCAG 2.1 Guideline 2.1, Keyboard Accessible). The \texttt{VoiceButton} component provides redundant feedback channels to support users with sensory decline \citep{wildenbosAgingBarriersInfluencing2018}, pairing a high-contrast dynamic waveform visualisation with distinct haptic vibration patterns (20\,ms versus 50\,ms) to confirm state transitions (WCAG 2.1 Guideline 1.3, Adaptable; Guideline 1.4, Distinguishable).
+
+% MERGE ANNOTATIONS SUMMARY FOR CH 4:
+%      - All Phase 2 Artifact content (§3.1-§3.6) preserved as sacred fabric
+%      - [TECHNICAL PRESERVATION] flags maintained throughout
+%      - [OVERLAP: AMPM description] --- Five-step AMPM NOT re-explained here.
+%        Section 4.4 references Ch 3.2.1 for the protocol; preserves only the
+%        step-to-node mapping (which is the novel contribution).
+%      - Section numbering adjusted for chapter context
+%      - No content deleted

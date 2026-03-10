@@ -47,11 +47,11 @@ Existing digital health interventions present a binary trade-off that is ill-sui
 
 <!-- SOURCE: Phase 2 Introduction paragraph 3 + Phase 1 Introduction paragraph 3.
      The scoping review findings motivate the artifact design.
-     [CITATION GAP: Phase 2 self-citation still uses [CITATION NEEDED] — student must resolve] -->
+     [CITATION GAP: RESOLVED — consolidated thesis uses "Chapter 2" cross-reference directly.] -->
 
 This technological limitation is substantiated by our scoping review of AI in geriatric nutrition (Chapter 2). Analysis of 25 eligible studies revealed that 92% of existing applications remain in prototype or pilot phases (median sample size $n=28$), often lacking operational validity. While the literature addresses visual recognition accuracy \citep{minSurveyFoodComputing2019,loImageBasedFoodClassification2020}, there is a demonstrated lack of deployed agentic AI workflows capable of self-auditing low confidence.
 
-To bridge the gap between high-friction manual logging and low-fidelity passive vision, technological design must mimic the investigative rigour of clinical practice. Emerging "Agentic AI" architectures offer a digital equivalent to the structured, recurring interview approach of the AMPM \citep{xiRisePotentialLarge2025,qiuLLMbasedAgenticSystems2024,sumersCognitiveArchitecturesLanguage2023}. Rather than acting as a static classifier, an agentic system employs active reasoning to detect uncertainty and initiate a feedback loop---much like a dietitian probing a patient to "remember the milk" in their coffee \citep{tuConversationalDiagnosticArtificial2025,kuhnCLAMSelectiveClarification2023}. By shifting from static perception to dynamic reasoning, the system can apply suppression logic to minor ambiguities while actively intervening via conversational repair only when medically necessary, balancing data fidelity with user fatigue.
+To bridge the gap between high-friction manual logging and low-fidelity passive vision, technological design must mimic the investigative rigour of clinical practice. Emerging "Agentic AI" architectures --- a term that, in the absence of a field-wide consensus definition, we operationalise here through converging characterisations in the recent literature \citep{xiRisePotentialLarge2025,qiuLLMbasedAgenticSystems2024,sumersCognitiveArchitecturesLanguage2023} as LLM-driven systems capable of autonomous reasoning, tool use, and iterative self-correction within a bounded task --- offer a digital equivalent to the structured, recurring interview approach of the AMPM. Rather than acting as a static classifier, an agentic system employs active reasoning to detect uncertainty and initiate a feedback loop---much like a dietitian probing a patient to "remember the milk" in their coffee \citep{tuConversationalDiagnosticArtificial2025,kuhnCLAMSelectiveClarification2023}. By shifting from static perception to dynamic reasoning, the system can apply suppression logic to minor ambiguities while actively intervening via conversational repair only when medically necessary, balancing data fidelity with user fatigue.
 
 ## 1.4 Research Questions
 
@@ -106,8 +106,7 @@ The remainder of this thesis is organised as follows. Chapter 2 presents the sco
      - [OVERLAP: AI landscape] — Removed from introduction; forward-referenced to Ch 2.
      - [OVERLAP: Translational gap] — Single mention of 92% finding; points to Ch 2 for detail.
      - [OVERLAP: Usability barriers] — Single citation cluster in 1.2; full treatment deferred to Ch 3.
-     - [CITATION GAP: Self-citation] — Phase 2's [CITATION NEEDED] replaced with "Chapter 2" cross-reference.
-       Student must decide: cite as published paper or use chapter cross-reference.
+     - [CITATION GAP: Self-citation] — RESOLVED. Chapter cross-reference used (consolidated thesis).
      - Phase 1's 7 scoping review RQs moved to Chapter 2.
      - Phase 2's RQs preserved verbatim.
      - Section 1.5 is NEW bridging content (skeletal — BR step will expand).

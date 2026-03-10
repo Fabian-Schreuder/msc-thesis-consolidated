@@ -79,7 +79,7 @@
 - **Action:** Merge Phase 2 .bib into Phase 1 .bib. Check for:
   - Duplicate citation keys for the same source (e.g., same paper cited in both phases)
   - Conflicting keys (different papers with similar auto-generated keys)
-  - Phase 2's `[CITATION NEEDED]` placeholder for scoping review self-citation
+  - ~~Phase 2's `[CITATION NEEDED]` placeholder~~ — RESOLVED: consolidated thesis uses Chapter 2 cross-reference
 
 <!-- Known shared citations (appear in both phases):
      - moshfeghUSDepartmentAgriculture2008 (AMPM)

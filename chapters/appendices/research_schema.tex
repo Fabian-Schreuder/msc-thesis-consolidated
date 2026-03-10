@@ -1,0 +1,64 @@
+% Content included by \chapter in appendices.tex
+
+To track the metrics defined in \ref{sec:evaluation}, the application logs research-specific metadata into a dedicated \texttt{research\_logs} table in Supabase. The complete entity-relationship diagram is shown in Figure~\ref{fig:schema_erd}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Column Name}          & \textbf{Data Type} & \textbf{Purpose}                         \\
+        \midrule
+        \texttt{log\_id}              & UUID               & Link to specific meal interaction        \\
+        \texttt{input\_modality}      & Enum               & voice, photo, text (For RQ2)             \\
+        \texttt{processing\_time\_ms} & Int                & Latency measurement ($< 5s$)             \\
+        \texttt{agent\_turns\_count}  & Int                & Friction measurement (Intervention Rate) \\
+        \texttt{was\_corrected}       & Boolean            & Error correction tracking (RQ3)          \\
+        \texttt{confidence\_score}    & Float              & Internal agent confidence metric         \\
+        \bottomrule
+    \end{tabular}
+    \caption{Schema for \texttt{research\_logs} table.}
+    \label{tab:research_schema}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llp{6.5cm}}
+        \toprule
+        \textbf{Column Name}       & \textbf{Data Type}  & \textbf{Purpose}                                      \\
+        \midrule
+        \texttt{id}                & UUID                & Primary key identifier                                \\
+        \texttt{user\_id}          & UUID (FK)           & Foreign key link to user                              \\
+        \texttt{image\_path}       & String              & Path to meal photo                                    \\
+        \texttt{audio\_path}       & String (nullable)   & Path to voice recording                               \\
+        \texttt{transcript}        & String (nullable)   & Transcribed voice description                         \\
+        \texttt{title}             & String (nullable)   & Agent-generated meal title                            \\
+        \texttt{description}       & String (nullable)   & Agent-generated meal description                      \\
+        \texttt{calories}          & Integer (nullable)  & Estimated caloric content                             \\
+        \texttt{protein}           & Integer (nullable)  & Estimated protein (grams)                             \\
+        \texttt{carbs}             & Integer (nullable)  & Estimated carbohydrates (grams)                       \\
+        \texttt{fats}              & Integer (nullable)  & Estimated fats (grams)                                \\
+        \texttt{meal\_type}        & String (nullable)   & Meal category (Breakfast, Lunch, Dinner, Snack)       \\
+        \texttt{status}            & Enum                & Log status: processing, clarification, logged, failed \\
+        \texttt{needs\_review}     & Boolean             & Flag for logs requiring dietitian review              \\
+        \texttt{client\_timestamp} & DateTime (nullable) & Client-side timestamp of meal                         \\
+        \texttt{created\_at}       & DateTime            & Server-side creation timestamp                        \\
+        \bottomrule
+    \end{tabular}
+    \caption{Schema for \texttt{dietary\_logs} table.}
+    \label{tab:dietary_logs_schema}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llp{6.5cm}}
+        \toprule
+        \textbf{Column Name}   & \textbf{Data Type} & \textbf{Purpose}                \\
+        \midrule
+        \texttt{id}            & UUID               & Primary unique identifier       \\
+        \texttt{anonymous\_id} & String             & Privacy-preserving anonymous ID \\
+        \texttt{created\_at}   & DateTime           & Account creation timestamp      \\
+        \bottomrule
+    \end{tabular}
+    \caption{Schema for \texttt{users} table.}
+    \label{tab:users_schema}
+\end{table}

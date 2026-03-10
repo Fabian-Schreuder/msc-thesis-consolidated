@@ -37,12 +37,9 @@ The user-facing layer is a progressive web application (PWA) built on a reactive
 <!-- [TRANSLATED: Supabase Auth → managed authentication service implementing de-identified sign-in.
      Rationale: The specific authentication provider is a vehicle. The contribution is the
      de-identified anonymous sign-in pattern itself.]
-     [PRIVACY GAP: No HIPAA/GDPR citations accompany the privacy claims here.
-     The de-identified authentication pattern should reference regulatory frameworks
-     that necessitate this design choice. Suggested: GDPR Article 25 (data protection by design),
-     or equivalent health data regulation.] -->
+     [PRIVACY GAP: RESOLVED — GDPR Art. 25 cited inline.] -->
 
-Authentication follows a *de-identified anonymous sign-in* pattern managed by a cloud-hosted authentication service (Supabase Auth). Each participant receives a persistent UUID with no associated personally identifiable information, satisfying the privacy requirements of clinical research while maintaining session continuity for longitudinal dietary tracking.
+Authentication follows a *de-identified anonymous sign-in* pattern managed by a cloud-hosted authentication service (Supabase Auth). Each participant receives a persistent UUID with no associated personally identifiable information, operationalising the GDPR principle of data protection by design \citep[Article 25]{europeanparliamentRegulationEU20162016} and satisfying the privacy requirements of clinical research while maintaining session continuity for longitudinal dietary tracking.
 
 ### 4.1.2 Back-End: API Server
 
@@ -75,12 +72,9 @@ The core intellectual contribution of the artifact resides in the agent layer, i
 <!-- [TRANSLATED: Supabase PostgreSQL → managed, encrypted relational database.
      Rationale: The specific database provider is a vehicle. The contribution is the schema
      design separating clinical metrics from session metadata.]
-     [PRIVACY GAP: The database stores dietary data that constitutes health information.
-     No reference to data-at-rest encryption, access control policies, or regulatory
-     compliance (GDPR, HIPAA) is provided. Suggested: cite data protection regulation
-     and describe the managed platform's compliance certifications.] -->
+     [PRIVACY GAP: RESOLVED — GDPR Art. 32 cited inline with encryption and access control.] -->
 
-All dietary records are persisted in a managed, encrypted relational database (Supabase-hosted PostgreSQL). The database schema separates computed nutritional metrics from session metadata, enabling researchers to query evaluation metrics without accessing raw user interactions.
+All dietary records are persisted in a managed, encrypted relational database (Supabase-hosted PostgreSQL) that provides encryption at rest and role-based access control, aligning with the GDPR requirement for appropriate technical and organisational measures to ensure a level of security appropriate to the risk \citep[Article 32]{europeanparliamentRegulationEU20162016}. The database schema separates computed nutritional metrics from session metadata, enabling researchers to query evaluation metrics without accessing raw user interactions.
 
 ### 4.1.5 Architectural Rationale
 
@@ -189,21 +183,32 @@ If $N_{max}$ is exhausted and $C$ remains above $\tau$, the router triggers a fa
      prompt engineering strategy (persona stability, graceful degradation) and the architectural
      decision to enforce structural determinism through typed schemas rather than post-hoc parsing.] -->
 
-To ensure appropriate interaction with a geriatric user base, the system relies on rigorous prompt engineering to enforce persona stability. A meta-prompt conditions the model to adopt a supportive, non-clinical tone. The agent operates under "Graceful Degradation" instructions to prevent refusal responses.
+To ensure appropriate interaction with a geriatric user base, the system relies on rigorous prompt engineering to enforce persona stability. A meta-prompt conditions the model to adopt a supportive, non-clinical tone. The agent operates under "Graceful Degradation" instructions to prevent refusal responses. The context window is scoped strictly to the current meal session to mitigate hallucination.
 
-The system enforces strict syntactic correctness using typed schema validation (Pydantic), requiring a JSON structure comprising a title, an item list (name, quantity, confidence), and a synthesis comment. The system maintains the default temperature ($T=1.0$) for the multimodal large language model (GPT-4o at time of evaluation). The typed schema validation handles structural determinism, allowing the higher temperature to generate naturalistic variations. To mitigate hallucination, the context window is scoped strictly to the current meal session.
+### 4.5.1 Iterative Prompt Optimisation for MAE Reduction
+
+<!-- INCORPORATED: Details from docs/prompt-engineering-iterations.md -->
+
+The performance of the reasoning engine was refined through an iterative prompt engineering protocol aimed at reducing the Mean Absolute Error (MAE) of caloric estimations. Using an Automated Prompt Optimization System developed as part of the artifact, variants were systematically benchmarked against a fixed subset of the Nutrition5K dataset.
+
+The **Baseline Prompt (Iteration 0)** provided general directives to identify food items and estimate quantities, relying on the model's latent knowledge. This approach yielded a baseline caloric MAE of 54.16 kcal but exhibited severe underestimation of calorie-dense meals (e.g., misestimating a high-fat sausage by 185 kcal).
+
+To correct this, **Iteration 1 (Verbose Methodology)** introduced a detailed, step-by-step estimation procedure specifying physical analogies for portion sizes (e.g., "fist-sized = $\sim$1 cup") and macronutrient caloric densities. Contrary to expectations, this verbose instruction set degraded performance, resulting in a 57\% regression in caloric MAE (85.16 kcal). The complexity of the instructions appeared to interfere with the model's deductive reasoning pathways.
+
+**Iteration 2 (Explicit Densities)** resolved this by simplifying the prompt structure and supplying a high signal-to-noise heuristic mapping of common food categories to their caloric density bounds per 100g (e.g., "Sausage/processed meat: 250-350 kcal/100g (HIGH FAT)"). Furthermore, the prompt instituted a conservative clinical bias: "When uncertain, estimate HIGHER rather than lower." This iteration achieved a 12\% improvement in caloric MAE relative to the baseline (47.72 kcal) and reduced severe underestimations, proving that targeted caloric heuristics paired with structural simplicity outperform verbose methodological instructions. 
+
+### 4.5.2 Structural Determinism
+
+The system enforces strict syntactic correctness using typed schema validation (Pydantic), requiring a JSON structure comprising a title, an item list (name, quantity, confidence), and a synthesis comment. The system maintains the default temperature ($T=1.0$) for the multimodal large language model (GPT-4o at time of evaluation). The typed schema validation handles structural determinism, allowing the higher temperature to generate naturalistic conversational variations without risking structural parse failures downstream.
 
 ## 4.6 Geriatric-Centric Interface Design
 
 <!-- SOURCE: Phase 2 Artifact §3.6. Verbatim.
-     [ACCESSIBILITY GAP: The interface design describes features that align with WCAG 2.1
-     Level AA accessibility guidelines (high contrast, haptic feedback, simplified interaction models),
-     but does not cite WCAG 2.1 or any geriatric-specific HCI accessibility standard.
-     Suggested citation: W3C Web Content Accessibility Guidelines (WCAG) 2.1, Level AA.
-     This would ground the design decisions in established accessibility standards
-     rather than presenting them as ad hoc choices.] -->
+     [ACCESSIBILITY GAP: RESOLVED — WCAG 2.1 Level AA cited, with specific guideline
+     references (2.1 Keyboard Accessible, 1.3 Adaptable, 1.4 Distinguishable) mapped
+     to the design features.] -->
 
-The frontend implementation addresses physical and sensory limitations identified in the problem analysis. The voice input mechanism utilises a "Tap-to-Toggle" interaction model rather than "Push-to-Talk," specifically accommodating users with reduced fine motor skills. The `VoiceButton` component provides redundant feedback channels to support users with sensory decline, pairing a high-contrast dynamic waveform visualisation with distinct haptic vibration patterns (20 ms versus 50 ms) to confirm state transitions \citep{venableFEDSFrameworkEvaluation2016}.
+The frontend implementation addresses physical and sensory limitations identified in the problem analysis, guided by the Web Content Accessibility Guidelines \citep{w3cWebContentAccessibility2023} at the AA conformance level. The voice input mechanism utilises a "Tap-to-Toggle" interaction model rather than "Push-to-Talk," specifically accommodating users with reduced fine motor skills (WCAG 2.1 Guideline 2.1, Keyboard Accessible). The `VoiceButton` component provides redundant feedback channels to support users with sensory decline \citep{wildenbosAgingBarriersInfluencing2018}, pairing a high-contrast dynamic waveform visualisation with distinct haptic vibration patterns (20 ms versus 50 ms) to confirm state transitions (WCAG 2.1 Guideline 1.3, Adaptable; Guideline 1.4, Distinguishable).
 
 ---
 
