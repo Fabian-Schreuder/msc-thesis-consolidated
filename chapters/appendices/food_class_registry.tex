@@ -1,0 +1,88 @@
+% Food Class Registry Specification — Appendix content
+\label{app:food-class-registry}
+
+This appendix reproduces the complete Food Class Registry used by the Snap and Say complexity-scoring pipeline (Section~\ref{sec:complexity-scoring}). The registry is maintained as a YAML configuration file (\texttt{food\_class\_registry.yaml}) and loaded at startup by a singleton \texttt{FoodClassRegistry} service.
+
+\section*{Registry Structure}
+
+Each food class entry defines the following fields:
+
+\begin{description}
+    \item[\texttt{weights}] A dictionary of per-dimension multipliers applied to the three ambiguity axes: \texttt{ingredients} (hidden-ingredient ambiguity), \texttt{prep} (invisible-preparation ambiguity), and \texttt{volume} (portion-size ambiguity). Values range from 0.0 to 1.0.
+    \item[\texttt{semantic\_penalty} ($P$)] An additive penalty (0.0--4.0) injected directly into the complexity score to reflect the inherent nutritional uncertainty of the class, independent of the ambiguity levels observed for a specific item.
+    \item[\texttt{mandatory\_clarification}] A Boolean flag indicating whether items matching this class must always trigger a clarification question, regardless of the computed complexity score.
+    \item[\texttt{is\_umbrella\_term}] A Boolean flag consumed by the Semantic Gatekeeper (Section~\ref{sec:agent-layer}); when \texttt{true}, the item is considered lexically unbounded and requires immediate clarification before complexity analysis proceeds.
+    \item[\texttt{aliases}] A list of surface-form strings (English and Dutch) used for case-insensitive lookup, including compound-word suffix matching and plural/diminutive inflections (\texttt{-s}, \texttt{-en}, \texttt{-je}, \texttt{-jes}).
+\end{description}
+
+Items that do not match any registered class receive the \emph{default} profile: equal weights of 0.5 on all three dimensions, zero semantic penalty, and no mandatory clarification.
+
+\section*{Complexity Scoring Formula}
+
+The per-item complexity score is computed as:
+
+\begin{equation}
+    C = \sum_{d \in \{\text{ingredients, prep, volume}\}} w_d \cdot L_d^{\,2} \;+\; P
+\end{equation}
+
+\noindent where $w_d$ is the dimension weight from the risk profile, $L_d \in [0, 4]$ is the ambiguity level assigned by the LLM for dimension~$d$, and $P$ is the semantic penalty. The dominant complexity factor is the dimension $d^{*} = \arg\max_d \, w_d \cdot L_d^{\,2}$, which is used to select the appropriate clarification-question template.
+
+\section*{Registered Food Classes}
+
+Table~\ref{tab:food-class-registry} summarises the three registered food classes and the default profile.
+
+\begin{table}[h]
+\centering
+\caption{Food Class Registry: per-class dimension weights, semantic penalties, and control flags.}
+\label{tab:food-class-registry}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Class} & $w_{\text{ingr}}$ & $w_{\text{prep}}$ & $w_{\text{vol}}$ & $P$ & \textbf{Mandatory} & \textbf{Umbrella} \\
+\midrule
+\texttt{meat\_analogue}  & 0.9 & 0.7 & 0.3 & 4.0 & \checkmark & \checkmark \\
+\texttt{dairy\_analogue} & 0.8 & 0.2 & 0.2 & 3.5 & \checkmark & \checkmark \\
+\texttt{stealth\_carb}   & 0.8 & 0.6 & 0.4 & 3.0 & \checkmark & \checkmark \\
+\midrule
+\textit{default}          & 0.5 & 0.5 & 0.5 & 0.0 & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Class 1: Meat Analogues (\texttt{meat\_analogue})}
+
+Covers foods where visual appearance diverges sharply from nutritional reality due to plant-based substitution. A burger patty may be beef ($\sim$250~kcal/100g, high protein) or a pea-protein analogue ($\sim$200~kcal/100g, high carbohydrates from starch binders and elevated sodium). The high ingredient weight ($w_{\text{ingr}} = 0.9$) and maximum semantic penalty ($P = 4.0$) ensure these items always receive elevated complexity scores and trigger clarification.
+
+\medskip
+\begin{sloppypar}
+\noindent\textbf{Aliases:} \texttt{burger}, \texttt{hamburger}, \texttt{cheeseburger}, \texttt{patty}, \texttt{sausage}, \texttt{worst}, \texttt{meatball}, \texttt{gehaktbal}, \texttt{nugget}, \texttt{chicken nugget}, \texttt{kipnugget}, \texttt{mince}, \texttt{gehakt}, \texttt{ground meat}, \texttt{meatloaf}, \texttt{bratwurst}, \texttt{braadworst}, \texttt{hot dog}, \texttt{hotdog}.
+\end{sloppypar}
+
+\subsection*{Class 2: Dairy Analogues (\texttt{dairy\_analogue})}
+
+Addresses the ``white liquid paradox'': visually identical beverages and dairy products span a wide nutritional range---cow's milk ($\sim$8g protein/cup) versus oat milk (high carbohydrate) versus almond milk (near-zero macronutrients). Preparation and volume weights are low ($w_{\text{prep}} = w_{\text{vol}} = 0.2$) because the primary uncertainty lies in ingredient composition, not cooking method or serving size.
+
+\medskip
+\begin{sloppypar}
+\noindent\textbf{Aliases:} \texttt{milk}, \texttt{melk}, \texttt{cheese}, \texttt{kaas}, \texttt{yogurt}, \texttt{yoghurt}, \texttt{ice cream}, \texttt{ijs}, \texttt{latte}, \texttt{cappuccino}, \texttt{macchiato}, \texttt{cream}, \texttt{room}, \texttt{butter}, \texttt{boter}.
+\end{sloppypar}
+
+\subsection*{Class 3: Stealth Carb Substitutes (\texttt{stealth\_carb})}
+
+Captures foods where low-carbohydrate alternatives are visually indistinguishable from their conventional counterparts (e.g.\ cauliflower rice vs.\ white rice, almond-flour pizza crust vs.\ wheat dough). Both ingredient and preparation weights are elevated ($w_{\text{ingr}} = 0.8$, $w_{\text{prep}} = 0.6$) because both the base ingredient and cooking method materially affect macronutrient content.
+
+\medskip
+\begin{sloppypar}
+\noindent\textbf{Aliases:} \texttt{bread}, \texttt{brood}, \texttt{pizza}, \texttt{crust}, \texttt{bodem}, \texttt{pasta}, \texttt{spaghetti}, \texttt{macaroni}, \texttt{noodle}, \texttt{noodles}, \texttt{noedels}, \texttt{bami}, \texttt{bun}, \texttt{broodje}, \texttt{bagel}, \texttt{wrap}, \texttt{tortilla}, \texttt{rice}, \texttt{rijst}, \texttt{cauliflower rice}, \texttt{bloemkoolrijst}, \texttt{pancake}, \texttt{pannenkoek}, \texttt{waffle}, \texttt{wafel}.
+\end{sloppypar}
+
+\section*{Alias Lookup Algorithm}
+
+The registry resolves food names to class keys through a two-stage procedure:
+
+\begin{enumerate}
+    \item \textbf{Exact match.} The normalised (lowercased, trimmed) food name is looked up directly in the alias map.
+    \item \textbf{Suffix match.} If no exact match is found, all registered aliases are tested as potential suffixes of the food name using the regular expression \texttt{(?i)<alias>(s|en|je|jes)?\textbackslash b}. Aliases are tested in descending length order to prioritise specificity (e.g.\ ``cheeseburger'' is matched before ``burger''). This handles compound words (e.g.\ ``runderburger'' $\to$ \texttt{meat\_analogue} via suffix ``burger'') and Dutch morphological variants.
+\end{enumerate}
+
+\noindent Items that do not match any alias receive the default risk profile ($w = 0.5$, $P = 0.0$, no mandatory clarification).

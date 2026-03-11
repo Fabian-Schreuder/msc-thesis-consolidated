@@ -31,7 +31,7 @@ The core intellectual contribution of the system resides in the agent layer, imp
 \begin{enumerate}
     \item \textbf{Analysis.} The entry node consumes the multimodal input and invokes a large language model to produce structured nutritional estimates, including per-item confidence scores and integer ambiguity levels along three orthogonal dimensions (hidden ingredients, invisible preparation, and portion ambiguity).
 
-    \item \textbf{Semantic Gatekeeper.} A dedicated node evaluates whether any reported food item is taxonomically unbounded---an ``umbrella term'' whose referent is nutritionally unconstrained. When such terms are detected, the agent interrupts the flow and requests categorical clarification from the user before any quantitative assessment is attempted. This node operationalises Objective 3 by consulting a curated Food Class Registry.
+    \item \textbf{Semantic Gatekeeper.} A dedicated node evaluates whether any reported food item is taxonomically unbounded---an ``umbrella term'' whose referent is nutritionally unconstrained. When such terms are detected, the agent interrupts the flow and requests categorical clarification from the user before any quantitative assessment is attempted. This node operationalises Objective 3 by consulting a curated Food Class Registry (Appendix~\ref{app:food-class-registry}).
 
     \item \textbf{Conditional Routing.} A decision edge evaluates three criteria in strict priority order: (a) mandatory override flags from the registry, (b) the deterministic complexity score $C$ computed against the session-specific clinical threshold $\tau$ (Objectives 1 and 2), and (c) a standard confidence gate.
 
@@ -56,12 +56,13 @@ All dietary records are persisted in a managed, encrypted relational database (S
 The decomposition into four subsystems reflects a deliberate mapping between design objectives and system boundaries. The front-end isolates input acquisition (Objective 6) from clinical reasoning; the API server enforces schema integrity; the agent layer encapsulates the entire friction-fidelity control policy (Objectives 1--5); and the data layer preserves the evidentiary record required for summative evaluation.
 
 \section{Dynamic Complexity Scoring and Agent Routing}
+\label{sec:complexity-scoring}
 
 \subsection{Inputs to the Complexity Calculator}
 
 The scoring pipeline operates on two categories of input. First, the LLM produces \emph{ambiguity levels} to systematically trigger selective clarification \citep{kuhnCLAMSelectiveClarification2023}. These levels quantify uncertainty along three orthogonal dimensions, each rated on an integer scale from 0 to 3: (i) \textbf{Hidden Ingredients} ($L_i$), (ii) \textbf{Invisible Preparation} ($L_p$), and (iii) \textbf{Portion Ambiguity} ($L_v$).
 
-Second, the system consults a \emph{Food Class Registry}---a curated, YAML-based knowledge base that maps food names and aliases to predefined risk profiles. Each risk profile encodes dimension-specific weights ($w_i$, $w_p$, $w_v$), a semantic penalty ($P_{\text{sem}}$), and a mandatory clarification flag.
+Second, the system consults a \emph{Food Class Registry} (Appendix~\ref{app:food-class-registry})---a curated, YAML-based knowledge base that maps food names and aliases to predefined risk profiles. Each risk profile encodes dimension-specific weights ($w_i$, $w_p$, $w_v$), a semantic penalty ($P_{\text{sem}}$), and a mandatory clarification flag.
 
 \subsection{The Deterministic Scoring Formula}
 
@@ -153,11 +154,14 @@ To ensure appropriate interaction with a geriatric user base, the system relies 
 
 The performance of the reasoning engine was refined through an iterative prompt engineering protocol aimed at reducing the Mean Absolute Error (MAE) of caloric estimations. Using an Automated Prompt Optimization System developed as part of the system, variants were systematically benchmarked against a fixed subset of the Nutrition5K dataset.
 
-The \textbf{Baseline Prompt (Iteration 0)} provided general directives to identify food items and estimate quantities, relying on the model's latent knowledge. This approach yielded a baseline caloric MAE of 54.16 kcal but exhibited severe underestimation of calorie-dense meals (e.g., misestimating a high-fat sausage by 185 kcal).
+\subsubsection{Baseline Prompt (Iteration 0)}
+The Baseline Prompt (Iteration 0) provided general directives to identify food items and estimate quantities, relying on the model's latent knowledge. This approach yielded a baseline caloric MAE of 54.16 kcal but exhibited severe underestimation of calorie-dense meals (e.g., misestimating a high-fat sausage by 185 kcal).
 
-To correct this, \textbf{Iteration 1 (Verbose Methodology)} introduced a detailed, step-by-step estimation procedure specifying physical analogies for portion sizes (e.g., ``fist-sized = $\sim$1 cup'') and macronutrient caloric densities. Contrary to expectations, this verbose instruction set degraded performance, resulting in a 57\% regression in caloric MAE (85.16 kcal). The complexity of the instructions appeared to interfere with the model's deductive reasoning pathways.
+\subsubsection{Iteration 1 (Verbose Methodology)}
+To correct this, Iteration 1 (Verbose Methodology) introduced a detailed, step-by-step estimation procedure specifying physical analogies for portion sizes (e.g., ``fist-sized = $\sim$1 cup'') and macronutrient caloric densities. Contrary to expectations, this verbose instruction set degraded performance, resulting in a 57\% regression in caloric MAE (85.16 kcal). The complexity of the instructions appeared to interfere with the model's deductive reasoning pathways.
 
-\textbf{Iteration 2 (Explicit Densities)} resolved this by simplifying the prompt structure and supplying a high signal-to-noise heuristic mapping of common food categories to their caloric density bounds per 100g (e.g., ``Sausage/processed meat: 250-350 kcal/100g (HIGH FAT)''). Furthermore, the prompt instituted a conservative clinical bias: ``When uncertain, estimate HIGHER rather than lower.'' This iteration achieved a 12\% improvement in caloric MAE relative to the baseline (47.72 kcal) and reduced severe underestimations, proving that targeted caloric heuristics paired with structural simplicity outperform verbose methodological instructions.
+\subsubsection{Iteration 2 (Explicit Densities)}
+Iteration 2 (Explicit Densities) resolved this by simplifying the prompt structure and supplying a high signal-to-noise heuristic mapping of common food categories to their caloric density bounds per 100g (e.g., ``Sausage/processed meat: 250-350 kcal/100g (HIGH FAT)''). Furthermore, the prompt instituted a conservative clinical bias: ``When uncertain, estimate HIGHER rather than lower.'' This iteration achieved a 12\% improvement in caloric MAE relative to the baseline (47.72 kcal) and reduced severe underestimations, proving that targeted caloric heuristics paired with structural simplicity outperform verbose methodological instructions.
 
 \subsection{Structural Determinism}
 

@@ -31,6 +31,8 @@
     linkcolor=black,
     citecolor=black,
     urlcolor=blue,
+    plainpages=false,
+    pdfpagelabels,
     pdftitle={Resolving the Friction-Fidelity Paradox: An Agentic AI Architecture for Dietary Assessment in Older Adults},
     pdfauthor={Fabian W. N. Schreuder}
 }
@@ -46,9 +48,9 @@
 \newcommand{\surveyrating}[2]{%
     \vspace{0.5em}
     \begin{center}
-        \begin{tabularx}{1.0\linewidth}{Y Y Y Y Y}
+        \begin{tabularx}{0.95\linewidth}{Y Y Y Y Y}
             \textbf{1}  & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5}  \\
-            (\mbox{#1}) &            &            &            & (\mbox{#2})
+            {\small #1} &            &            &            & {\small #2}
         \end{tabularx}
     \end{center}
     \vspace{1.5em}
@@ -56,9 +58,9 @@
 \newcommand{\surveyratingmid}[3]{%
     \vspace{0.5em}
     \begin{center}
-        \begin{tabularx}{1.0\linewidth}{Y Y Y Y Y}
+        \begin{tabularx}{0.95\linewidth}{Y Y Y Y Y}
             \textbf{1}  & \textbf{2} & \textbf{3}  & \textbf{4} & \textbf{5}  \\
-            (\mbox{#1}) &            & (\mbox{#2}) &            & (\mbox{#3})
+            {\small #1} &            & {\small #2} &            & {\small #3}
         \end{tabularx}
     \end{center}
     \vspace{1.5em}
@@ -93,6 +95,8 @@
 % ============================================================
 
 \maketitle
+\setcounter{page}{0}
+\pagenumbering{roman}
 
 % --- ABSTRACT ---
 \begin{abstract}
@@ -121,6 +125,8 @@
 % ============================================================
 %  CHAPTER 1: INTRODUCTION
 % ============================================================
+\clearpage
+\pagenumbering{arabic}
 \chapter{Introduction}
 \label{ch:introduction}
 \input{chapters/ch1_introduction}
