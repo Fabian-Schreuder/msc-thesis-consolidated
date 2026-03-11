@@ -415,7 +415,7 @@ Requirements:
 
 \section*{E. Model Generation Parameters}
 
-All benchmarking runs reported in Chapter~\ref{ch:evaluation} used the OpenAI API with the parameters shown in Table~\ref{tab:model-params}. Parameters not listed were left at their API defaults. The OpenAI Structured Outputs API (\texttt{beta.chat.completions.parse}) was used, which enforces strict schema adherence via constrained decoding; explicit \texttt{response\_format} and \texttt{max\_tokens} overrides were therefore not required.
+All benchmarking runs reported in Chapter~\ref{ch:evaluation} used the Google Gemini API with the parameters shown in Table~\ref{tab:model-params}. Parameters not listed were left at their API defaults. Structured output was enforced via \texttt{response\_mime\_type: application/json} with a Pydantic-derived \texttt{response\_schema}, which constrains generation to valid JSON matching the \texttt{AnalysisResult} schema.
 
 \begin{table}[h]
 \centering
@@ -425,14 +425,12 @@ All benchmarking runs reported in Chapter~\ref{ch:evaluation} used the OpenAI AP
 \toprule
 \textbf{Parameter} & \textbf{Value} \\
 \midrule
-Model & \texttt{gpt-4o} (OpenAI default snapshot) \\
+Model & \texttt{gemini-3-flash-preview} \\
 Temperature ($T$) & 1.0 (API default; not explicitly set) \\
-Top-p & 1.0 (API default; not explicitly set) \\
-Frequency penalty & 0 (API default; not explicitly set) \\
-Presence penalty & 0 (API default; not explicitly set) \\
-Max tokens & Not set (API default) \\
-Response format & Structured Outputs via Pydantic schema \\
-API client timeout & 60 s; max retries: 3 \\
+Max output tokens & 8192 \\
+Response MIME type & \texttt{application/json} \\
+Response schema & Pydantic \texttt{AnalysisResult} schema \\
+Top-p & API default (not explicitly set) \\
 \bottomrule
 \end{tabular}
 \end{table}

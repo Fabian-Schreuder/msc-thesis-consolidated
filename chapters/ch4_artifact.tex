@@ -161,7 +161,7 @@ To correct this, \textbf{Iteration 1 (Verbose Methodology)} introduced a detaile
 
 \subsection{Structural Determinism}
 
-The system enforces strict syntactic correctness using typed schema validation (Pydantic), requiring a JSON structure comprising a title, an item list (name, quantity, confidence), and a synthesis comment. The system maintains the default temperature ($T=1.0$) for the multimodal large language model (GPT-4o at time of evaluation). The typed schema validation handles structural determinism, allowing the higher temperature to generate naturalistic conversational variations without risking structural parse failures downstream.
+The system enforces strict syntactic correctness using typed schema validation (Pydantic), requiring a JSON structure comprising a title, an item list (name, quantity, confidence), and a synthesis comment. The system maintains the default temperature ($T=1.0$) for the multimodal large language model (Gemini 3.0 Flash Preview at time of evaluation). The typed schema validation handles structural determinism, allowing the higher temperature to generate naturalistic conversational variations without risking structural parse failures downstream.
 
 The exact textual content of all three prompt iterations, the meta-prompt governing persona and graceful degradation, and the full set of model generation parameters are reproduced verbatim in Appendix~\ref{app:prompts}. The complete prompt source files are also available in the public repository at \url{https://github.com/Fabian-Schreuder/snapandsay}, enabling independent replication of the benchmarking protocol described above.
 
