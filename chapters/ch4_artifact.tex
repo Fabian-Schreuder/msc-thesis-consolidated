@@ -1,10 +1,10 @@
-This chapter presents the instantiation of the design objectives formalised in Chapter~\ref{ch:methodology}. Each subsystem of the Snap and Say architecture addresses one or more of the six objectives, and each architectural decision can be traced back to a specific gap identified in the scoping review (Section~\ref{sec:implications}). The chapter is organised by subsystem to reflect the artifact's modular decomposition.
+This chapter presents the instantiation of the design objectives formalised in Chapter~\ref{ch:methodology}. Each subsystem of the Snap and Say architecture addresses one or more of the six objectives, and each architectural decision can be traced back to a specific gap identified in the scoping review (Section~\ref{sec:implications}). The chapter is organised by subsystem to reflect the system's modular decomposition.
 
 \section{System Architecture Overview}
 
-The Snap and Say artifact is realised as a client-server web application composed of four principal subsystems---three independently deployed units and one logically separated layer: a progressive web application (PWA) front-end, a Python API server, an LLM-orchestrated agent layer co-hosted within the API server, and a managed relational database. Each subsystem addresses a distinct concern identified in the design objectives (Section~\ref{sec:objectives}), yet cross-cutting requirements---streaming feedback, de-identified authentication, and clinical configurability---shape the communication patterns that bind them.
+The Snap and Say system is realised as a client-server web application composed of four principal subsystems---three independently deployed units and one logically separated layer: a progressive web application (PWA) front-end, a Python API server, an LLM-orchestrated agent layer co-hosted within the API server, and a managed relational database. Each subsystem addresses a distinct concern identified in the design objectives (Section~\ref{sec:objectives}), yet cross-cutting requirements---streaming feedback, de-identified authentication, and clinical configurability---shape the communication patterns that bind them.
 
-This section provides a top-level architectural description of the instantiated artifact, situating the subsystems within Hevner et al.'s \citep{hevnerDesignScienceInformation2004} three-cycle view of Design Science Research: the \emph{relevance cycle} (user-facing interaction), the \emph{design cycle} (the engineered artifact), and the \emph{rigour cycle} (methodological grounding). The architecture is designed to resolve the friction-fidelity paradox identified in Section~\ref{sec:problem-id}: every subsystem boundary reflects a deliberate trade-off between minimising user burden and maximising clinical data quality. Figure~\ref{fig:system-architecture} provides a top-level view of the four-subsystem deployment.
+This section provides a top-level architectural description of the instantiated system, situating the subsystems within Hevner et al.'s \citep{hevnerDesignScienceInformation2004} three-cycle view of Design Science Research: the \emph{relevance cycle} (user-facing interaction), the \emph{design cycle} (the engineered system), and the \emph{rigour cycle} (methodological grounding). The architecture is designed to resolve the friction-fidelity paradox identified in Section~\ref{sec:problem-id}: every subsystem boundary reflects a deliberate trade-off between minimising user burden and maximising clinical data quality. Figure~\ref{fig:system-architecture} provides a top-level view of the four-subsystem deployment.
 
 \begin{figure}[htbp]
     \centering
@@ -26,7 +26,7 @@ The backend is an asynchronous Python API server (FastAPI) deployed on a managed
 \subsection{Agent Layer: LangGraph State Graph}
 \label{sec:agent-layer}
 
-The core intellectual contribution of the artifact resides in the agent layer, implemented as a directed state graph using the LangGraph framework \citep{chaseLangChain2022}. The graph encodes the three-phase ordering mandated by Objective 5---semantic resolution before quantitative clarification---as a topological invariant of its node structure. The numbered nodes correspond to five stages, illustrated in Figure~\ref{fig:agent-flow}:
+The core intellectual contribution of the system resides in the agent layer, implemented as a directed state graph using the LangGraph framework \citep{chaseLangChain2022}. The graph encodes the three-phase ordering mandated by Objective 5---semantic resolution before quantitative clarification---as a topological invariant of its node structure. The numbered nodes correspond to five stages, illustrated in Figure~\ref{fig:agent-flow}:
 
 \begin{enumerate}
     \item \textbf{Analysis.} The entry node consumes the multimodal input and invokes a large language model to produce structured nutritional estimates, including per-item confidence scores and integer ambiguity levels along three orthogonal dimensions (hidden ingredients, invisible preparation, and portion ambiguity).
@@ -145,12 +145,13 @@ The subgraph enforces a strict safety budget ($N_{max}=2$). Within the DSR frame
 If $N_{max}$ is exhausted and $C$ remains above $\tau$, the router triggers a fail-safe mechanism, flagging the record for manual clinical review.
 
 \section{Prompt Engineering and Model Configuration}
+\label{sec:prompt-engineering}
 
 To ensure appropriate interaction with a geriatric user base, the system relies on rigorous prompt engineering to enforce persona stability. A meta-prompt conditions the model to adopt a supportive, non-clinical tone. The agent operates under ``Graceful Degradation'' instructions to prevent refusal responses. The context window is scoped strictly to the current meal session to mitigate hallucination.
 
 \subsection{Iterative Prompt Optimisation for MAE Reduction}
 
-The performance of the reasoning engine was refined through an iterative prompt engineering protocol aimed at reducing the Mean Absolute Error (MAE) of caloric estimations. Using an Automated Prompt Optimization System developed as part of the artifact, variants were systematically benchmarked against a fixed subset of the Nutrition5K dataset.
+The performance of the reasoning engine was refined through an iterative prompt engineering protocol aimed at reducing the Mean Absolute Error (MAE) of caloric estimations. Using an Automated Prompt Optimization System developed as part of the system, variants were systematically benchmarked against a fixed subset of the Nutrition5K dataset.
 
 The \textbf{Baseline Prompt (Iteration 0)} provided general directives to identify food items and estimate quantities, relying on the model's latent knowledge. This approach yielded a baseline caloric MAE of 54.16 kcal but exhibited severe underestimation of calorie-dense meals (e.g., misestimating a high-fat sausage by 185 kcal).
 
@@ -161,6 +162,8 @@ To correct this, \textbf{Iteration 1 (Verbose Methodology)} introduced a detaile
 \subsection{Structural Determinism}
 
 The system enforces strict syntactic correctness using typed schema validation (Pydantic), requiring a JSON structure comprising a title, an item list (name, quantity, confidence), and a synthesis comment. The system maintains the default temperature ($T=1.0$) for the multimodal large language model (GPT-4o at time of evaluation). The typed schema validation handles structural determinism, allowing the higher temperature to generate naturalistic conversational variations without risking structural parse failures downstream.
+
+The exact textual content of all three prompt iterations, the meta-prompt governing persona and graceful degradation, and the full set of model generation parameters are reproduced verbatim in Appendix~\ref{app:prompts}. The complete prompt source files are also available in the public repository at \url{https://github.com/Fabian-Schreuder/snapandsay}, enabling independent replication of the benchmarking protocol described above.
 
 \section{Geriatric-Centric Interface Design}
 \label{sec:interface-design}
