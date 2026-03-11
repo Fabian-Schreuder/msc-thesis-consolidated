@@ -21,9 +21,14 @@ This chapter presents the instantiation of the design objectives formalised in C
 
 The Snap and Say artifact is realised as a client-server web application composed of four principal subsystems---three independently deployed units and one logically separated layer: a progressive web application (PWA) front-end, a Python API server, an LLM-orchestrated agent layer co-hosted within the API server, and a managed relational database. Each subsystem addresses a distinct concern identified in the design objectives (Section~\ref{sec:objectives}), yet cross-cutting requirements---streaming feedback, de-identified authentication, and clinical configurability---shape the communication patterns that bind them.
 
-This section provides a top-level architectural description of the instantiated artifact, situating the subsystems within Hevner et al.'s \citep{hevnerDesignScienceInformation2004} three-cycle view of Design Science Research: the \emph{relevance cycle} (user-facing interaction), the \emph{design cycle} (the engineered artifact), and the \emph{rigour cycle} (methodological grounding). The architecture is designed to resolve the friction-fidelity paradox identified in Section~\ref{sec:problem-id}: every subsystem boundary reflects a deliberate trade-off between minimising user burden and maximising clinical data quality.
+This section provides a top-level architectural description of the instantiated artifact, situating the subsystems within Hevner et al.'s \citep{hevnerDesignScienceInformation2004} three-cycle view of Design Science Research: the \emph{relevance cycle} (user-facing interaction), the \emph{design cycle} (the engineered artifact), and the \emph{rigour cycle} (methodological grounding). The architecture is designed to resolve the friction-fidelity paradox identified in Section~\ref{sec:problem-id}: every subsystem boundary reflects a deliberate trade-off between minimising user burden and maximising clinical data quality. Figure~\ref{fig:system-architecture} provides a top-level view of the four-subsystem deployment.
 
-% [Figure: Reference architecture of Snap and Say]
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{system_architecture.png}
+    \caption{Reference architecture of Snap and Say. Solid arrows denote runtime data flow; the dashed arrow indicates a user-mediated re-entry after semantic clarification. Numbers inside the agent layer correspond to the five-stage pipeline described in Section~\ref{sec:agent-layer}.}
+    \label{fig:system-architecture}
+\end{figure}
 
 \subsection{Front-End: Progressive Web Application}
 
@@ -55,7 +60,7 @@ The backend is an asynchronous Python API server (FastAPI) deployed on a managed
 % [TECHNICAL PRESERVATION: Directed state graph architecture]
 % [CORE NOVELTY: Agentic AI architecture for dietary assessment]
 
-The core intellectual contribution of the artifact resides in the agent layer, implemented as a directed state graph using the LangGraph framework \citep{chaseLangChain2022}. The graph encodes the three-phase ordering mandated by Objective 5---semantic resolution before quantitative clarification---as a topological invariant of its node structure. The numbered nodes correspond to five stages:
+The core intellectual contribution of the artifact resides in the agent layer, implemented as a directed state graph using the LangGraph framework \citep{chaseLangChain2022}. The graph encodes the three-phase ordering mandated by Objective 5---semantic resolution before quantitative clarification---as a topological invariant of its node structure. The numbered nodes correspond to five stages, illustrated in Figure~\ref{fig:agent-flow}:
 
 \begin{enumerate}
     \item \textbf{Analysis.} The entry node consumes the multimodal input and invokes a large language model to produce structured nutritional estimates, including per-item confidence scores and integer ambiguity levels along three orthogonal dimensions (hidden ingredients, invisible preparation, and portion ambiguity).
@@ -68,6 +73,13 @@ The core intellectual contribution of the artifact resides in the agent layer, i
 
     \item \textbf{Finalisation.} The terminal node persists the validated nutritional data to the database and closes the SSE stream.
 \end{enumerate}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{agent_flow.png}
+    \caption{Directed state graph of the Snap and Say agent layer (LangGraph implementation). Nodes correspond to the five-stage pipeline; conditional edges encode the three-tier routing policy. The dashed path indicates the AMPM subgraph activated when the complexity score $C$ exceeds the clinical threshold $\tau$.}
+    \label{fig:agent-flow}
+\end{figure}
 
 \subsection{Data Layer: Managed Relational Database}
 
@@ -121,9 +133,14 @@ A safety budget of at most two clarification rounds prevents unbounded questioni
 
 % SOURCE: Phase 2 Artifact §3.3. Verbatim.
 
-The dietary assessment process is initiated through a multimodal input pipeline designed to satisfy Objective 6 (Multimodal Input Fusion). By fusing visual and acoustic data, the architecture compensates for the ambiguity inherent in isolated modalities.
+The dietary assessment process is initiated through a multimodal input pipeline designed to satisfy Objective 6 (Multimodal Input Fusion). By fusing visual and acoustic data, the architecture compensates for the ambiguity inherent in isolated modalities. Figure~\ref{fig:data-pipeline} illustrates the four-phase pipeline sequence from media capture through streaming execution.
 
-% [Figure: Sequence diagram of multimodal input pipeline]
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{data_pipeline.png}
+    \caption{Sequence diagram illustrating the multimodal input pipeline, demonstrating the decoupling of media storage from the API request and the streaming execution model.}
+    \label{fig:data-pipeline}
+\end{figure}
 
 \subsection{Input Capture and Transmission}
 

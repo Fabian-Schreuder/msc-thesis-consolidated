@@ -1,34 +1,10 @@
 \label{app:supplementary_figures}
 
-This appendix contains supplementary figures illustrating the data pipeline, system architecture, and user journey of the proposed solution.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1.0\textwidth,height=0.9\textheight,keepaspectratio]{data_pipeline.png}
-    \caption{Data Pipeline}
-    \label{fig:data_pipeline}
-\end{figure}
-\clearpage
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1.0\textwidth,height=0.9\textheight,keepaspectratio]{system_architecture.png}
-    \caption{System Architecture}
-    \label{fig:system_architecture}
-\end{figure}
-\clearpage
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1.0\textwidth,height=0.9\textheight,keepaspectratio]{user_journey.png}
-    \caption{User Journey}
-    \label{fig:user_journey}
-\end{figure}
-\clearpage
+This appendix contains supplementary figures for the Snap and Say artifact. The system architecture, data pipeline sequence diagram, and interface demonstration are reproduced in the main text (Figures~\ref{fig:system-architecture}, \ref{fig:data-pipeline}, and \ref{fig:user-journey} respectively); this appendix provides the entity-relationship diagram of the research database.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1.0\textwidth,height=0.9\textheight,keepaspectratio]{schema_erd.png}
-    \caption{Entity-Relationship Diagram of the Research Database.}
+    \caption{Entity-Relationship Diagram of the Research Database. The schema separates computed nutritional metrics from session metadata, enabling researchers to query evaluation metrics without accessing raw user interactions.}
     \label{fig:schema_erd}
 \end{figure}

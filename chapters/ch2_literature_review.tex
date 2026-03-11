@@ -83,11 +83,23 @@ A meta-analysis was not conducted due to heterogeneity. Instead, a narrative syn
 %      All figure and table references retained with updated numbering for consolidated thesis.
 %      [CORE NOVELTY: Evidence Gap Map methodology]
 
-The selection process filtered 587 initial records down to 25 included studies based on strict age and empirical evaluation criteria. Appendix~\ref{app:included-studies} provides a comprehensive characterisation of these 25 systems.
+The selection process filtered 587 initial records down to 25 included studies based on strict age and empirical evaluation criteria, as illustrated in Figure~\ref{fig:prisma-flow}. Appendix~\ref{app:included-studies} provides a comprehensive characterisation of these 25 systems.
 
-% [Figure: PRISMA 2020 flow diagram]
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{1_prisma.pdf}
+    \caption{PRISMA 2020 flow diagram detailing the study selection process. Generated using the PRISMA2020 R package.}
+    \label{fig:prisma-flow}
+\end{figure}
 
-The publication timeline of the 25 included studies (2016--2025) shows that publication frequency increased over time, with $68\%$ ($n=17$) published since 2021, suggesting growing research interest. The studies originated from 18 countries across five continents, primarily Asia ($n=13$, $52\%$) and Europe ($n=9$, $36\%$). Research was concentrated in high-income and upper-middle-income countries, with a notable gap from lower-income settings.
+The publication timeline of the 25 included studies (2016--2025) shows that publication frequency increased over time, with $68\%$ ($n=17$) published since 2021, suggesting growing research interest (Figure~\ref{fig:publication-trends}). The studies originated from 18 countries across five continents, primarily Asia ($n=13$, $52\%$) and Europe ($n=9$, $36\%$). Research was concentrated in high-income and upper-middle-income countries, with a notable gap from lower-income settings.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{2_publication_trends.pdf}
+    \caption{Annual publication frequency of included studies (2016--2025), illustrating an increase in research activity from 2021 onwards.}
+    \label{fig:publication-trends}
+\end{figure}
 
 Methodological approaches were diverse. Pilot studies ($n=10$, $40\%$) and prototype development studies ($n=8$, $32\%$) were the most common designs. Studies were most frequently conducted among community-dwelling older adults ($n=9$, $36\%$), followed by hospital and LTC facilities. Sample sizes varied considerably from two to 131 participants (median=28).
 
@@ -111,15 +123,35 @@ Systems focused on automated detection of fine-grained eating behaviours using w
 
 \subsection{Cross-Cutting Data Infrastructure Themes}
 
-Reliance on multimodal data pipelines was evident, with $68\%$ ($n=17$) of studies integrating two or more data types. Image data ($n=11$) was central for dietary assessment. Sensor data ($n=11$) was used for behaviour and physiological monitoring. Tabular data ($n=11$) served as the foundation for personalisation and clinical risk modelling. Text data ($n=7$) was central to conversational agents and knowledge-based systems.
+Reliance on multimodal data pipelines was evident, with $68\%$ ($n=17$) of studies integrating two or more data types. Image data ($n=11$) was central for dietary assessment. Sensor data ($n=11$) was used for behaviour and physiological monitoring. Tabular data ($n=11$) served as the foundation for personalisation and clinical risk modelling. Text data ($n=7$) was central to conversational agents and knowledge-based systems. Figure~\ref{fig:modality-heatmap} visualises the distribution of these modalities across application domains; Figure~\ref{fig:technical-pipeline-sankey} traces the dominant technological pathways from input modality through AI method to application goal.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{3_modality_application_heatmap.pdf}
+    \caption{Heatmap of data modality usage across application domains. Colour intensity corresponds to the number of studies, highlighting the dominance of tabular data in behaviour change systems and the reliance on sensor and image data for monitoring and activity recognition tasks.}
+    \label{fig:modality-heatmap}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{4_technical_pipeline_sankey.pdf}
+    \caption{Multi-level Sankey diagram mapping the technical pipeline from Input Data Modality $\rightarrow$ AI Technology $\rightarrow$ Application Goal. The visualisation highlights dominant technological pathways, such as the reliance on deep learning for image-based dietary assessment and the use of machine learning with tabular data for behaviour change.}
+    \label{fig:technical-pipeline-sankey}
+\end{figure}
 
 Data availability remained a significant limitation. Only four studies ($16\%$) utilised publicly available datasets, while the majority ($84\%$) relied on private, proprietary, or ``available upon request'' data, potentially hindering reproducibility.
 
-A defining feature of the reviewed literature is its nascent nature. $92\%$ of systems were either prototypes ($n=11$) or undergoing pilot testing ($n=12$). Only two systems had advanced beyond this preliminary phase.
+A defining feature of the reviewed literature is its nascent nature. $92\%$ of systems were either prototypes ($n=11$) or undergoing pilot testing ($n=12$). Only two systems had advanced beyond this preliminary phase. Figure~\ref{fig:evidence-gap-map} presents the full distribution of studies across application goals, study settings, and system maturity levels.
 
-% [Figure: Evidence Gap Map]
 % [CORE NOVELTY: Evidence Gap Map methodology --- the visualization of
 %      application goals x study settings x maturity is a methodological contribution]
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{5_evidence_gap_map.pdf}
+    \caption{Evidence Gap Map illustrating the distribution of studies across Application Goals and Study Settings. Bubble size represents the number of studies, and colour indicates the dominant system maturity stage (e.g., Prototype, Pilot). The map highlights a lack of research in formal care settings for several application domains.}
+    \label{fig:evidence-gap-map}
+\end{figure}
 
 \section{Discussion of Review Findings}
 \label{sec:discussion-review}
@@ -131,7 +163,7 @@ A defining feature of the reviewed literature is its nascent nature. $92\%$ of s
 
 This scoping review of 25 studies indicates that AI in geriatric nutrition is a nascent field characterised by a gap between technological potential and real-world application. Research is concentrated on applications for behaviour change and recommendation ($n=11$) and dietary assessment and monitoring ($n=6$), accounting for $68\%$ of the included literature. The majority of systems ($n=23$, $92\%$) remain in prototype or pilot stages, with corresponding gaps in real-world validation and data availability.
 
-The evidence gap map reveals opportunities and disparities. Applications for behaviour change and recommendation are predominantly studied in community-dwelling contexts, while activity recognition and screening are more common in hospital and acute care settings. However, no studies focused on behaviour change and recommendation were conducted in LTC settings---a notable void given the high prevalence of malnutrition in this demographic.
+The evidence gap map (Figure~\ref{fig:evidence-gap-map}) reveals opportunities and disparities. Applications for behaviour change and recommendation are predominantly studied in community-dwelling contexts, while activity recognition and screening are more common in hospital and acute care settings. However, no studies focused on behaviour change and recommendation were conducted in LTC settings---a notable void given the high prevalence of malnutrition in this demographic.
 
 This translational challenge is compounded by the reliance on early-stage evaluations. With $92\%$ of studies describing prototypes or pilot tests, often utilising small, non-representative samples, the generalisability of current findings is limited. One usability study noted that their ``participant sample was skewed towards expert technology users'' \citep{balsaUsabilityIntelligentVirtual2020}, highlighting a need for pragmatic, multi-site RCTs.
 
