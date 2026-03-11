@@ -1,25 +1,5 @@
-% Appendices
-%
-% MERGE NOTE: Appendices consolidated from both phases.
-%      Phase 1 appendices (A-B) preserved verbatim.
-%      Phase 2 appendices routed here per consolidation plan.
-%
-% NOTE: \appendix is called in main.tex before \input{chapters/appendices}.
-%      All \chapter{} commands here are auto-numbered A, B, C, ...
-%      The Phase 1 appendix.tex file is NOT \input-ed directly because it
-%      contains its own \appendix and \section commands that conflict with
-%      the consolidated numbering. Instead, its content is included inline
-%      with the correct structural commands.
-
-% ============================================================
-%  APPENDIX A: MEDLINE (PubMed) Search Strategy
-% ============================================================
 \chapter{MEDLINE (PubMed) Search Strategy}
 \label{app:search-strategy}
-
-% SOURCE: Phase 1 Appendix A. Content from ../msc-thesis-phase1/chapters/appendix.tex
-%      Included inline to avoid the \appendix and \section counter resets
-%      from the original file.
 
 \setcounter{table}{0}
 \renewcommand{\thetable}{\thechapter.\arabic{table}}
@@ -199,13 +179,8 @@
     \textbf{Final Search}        & \texttt{(1) AND (2) AND (3) AND (4) NOT (5)}         \\
 \end{longtable}
 
-% ============================================================
-%  APPENDIX B: Characteristics of Included Studies
-% ============================================================
 \chapter{Characteristics of Included Studies}
 \label{app:included-studies}
-
-% SOURCE: Phase 1 Appendix B. 25 studies table. Sacred fabric.
 
 \setcounter{table}{0}
 \renewcommand{\thetable}{\thechapter.\arabic{table}}
@@ -281,57 +256,27 @@
     \citeauthor{wangAreNutritionalLabeling2024}, \citeyear{wangAreNutritionalLabeling2024}                                             & China             & Natural Language Processing (NLP) & To assist older adults with food identification and dietary planning for better dietary management.                                                                                                                                    \\
 \end{longtable}
 
-% ============================================================
-%  APPENDIX C: Supplementary System Architecture Figures
-% ============================================================
 \chapter{Supplementary System Architecture Figures}
-
-% SOURCE: Phase 2 appendices/supplementary_figures.tex
 
 \input{chapters/appendices/supplementary_figures}
 
-% ============================================================
-%  APPENDIX D: Research Schema
-% ============================================================
 \chapter{Research Schema}
-
-% SOURCE: Phase 2 appendices/research_schema.tex
 
 \input{chapters/appendices/research_schema}
 
-% ============================================================
-%  APPENDIX E: Post-Task Survey Instrument
-% ============================================================
 \chapter{Post-Task Survey Instrument}
-
-% SOURCE: Phase 2 appendices/survey.tex (English)
 
 \input{chapters/appendices/survey}
 
-% ============================================================
-%  APPENDIX F: Task Script and Observation Log
-% ============================================================
 \chapter{Task Script and Observation Log}
-
-% SOURCE: Phase 2 appendices/task_script.tex
 
 \input{chapters/appendices/task_script}
 
-% ============================================================
-%  APPENDIX G: Participant Consent Form
-% ============================================================
 \chapter{Participant Consent Form}
 \label{app:consent}
 
-% SOURCE: Phase 2 appendices/participant_consent_form.tex (English)
-
 \input{chapters/appendices/participant_consent_form}
 
-% ============================================================
-%  APPENDIX H: Food Class Registry Specification
-% ============================================================
 \chapter{Food Class Registry Specification}
-
-% ROUTED TO APPENDIX: Hyper-specific technical detail from artifact.
 
 \textit{[To be completed: Food Class Registry YAML specification with per-class dimension weights, semantic penalties, and mandatory clarification flags. Extract from system implementation.]}

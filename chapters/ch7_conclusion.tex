@@ -1,21 +1,6 @@
-% Chapter 7: Conclusion
-%
-% MERGE NOTE: This chapter uses Phase 2's Conclusion as the primary fabric,
-%      expanded to encompass both phases of the thesis.
-%      Phase 2 has a strong conclusion with knowledge contribution framework.
-%      Changes:
-%      1. Summary expanded to encompass both phases
-%      2. Principal findings includes Phase 1 key findings
-%      3. Contribution to Knowledge adds Phase 1's evidence mapping contribution
-%      4. Limitations and Future Work draws from both phases
-
-% [TONE HARMONIZED: Chapter-opening transition inserted --- draws together both phases.]
-
 This chapter draws together the findings of both research phases --- the evidence mapping and the artifact evaluation --- to assess the thesis's contribution to the field of AI-mediated dietary assessment for older adults.
 
 \section{Summary of the Research}
-
-% SOURCE: Phase 2 Conclusion §6.1, expanded for two-phase scope
 
 This thesis addressed the friction-fidelity paradox in automated dietary assessment: the inherent tension between minimising user burden to sustain longitudinal adherence and maximising nutritional data precision for clinical utility. The research was conducted in two complementary phases.
 
@@ -25,8 +10,6 @@ This thesis addressed the friction-fidelity paradox in automated dietary assessm
 
 \section{Principal Findings}
 
-% SOURCE: Phase 2 Conclusion §6.2, with Phase 1 findings integrated
-
 \textbf{From the scoping review:} The evidence mapping revealed four distinct application categories (behaviour change, dietary assessment, screening, activity recognition) with a pronounced translational gap. The evidence gap map identified the absence of interventional studies in long-term care settings and the field's reliance on early-stage evaluations with small, non-representative samples. These findings provided both the motivation and the design constraints for the artifact.
 
 \textbf{From the artifact evaluation:} The simulated benchmarking demonstrated that the agentic clarification cycles reduced caloric estimation MAE by $30.6\%$ on Complex items relative to a single-shot baseline, yielding an overall MAE reduction of $22.8\%$. The suppression logic achieved a $92\%$ True Negative Rate on Simple items, confirming that the routing architecture successfully withholds intervention where it would impose burden without commensurate clinical value. The optimal routing configuration ($C_{\text{thresh}}=15.0$, $\text{Conf}_{\text{thresh}}=0.85$) was established through systematic parameter sweep.
@@ -34,8 +17,6 @@ This thesis addressed the friction-fidelity paradox in automated dietary assessm
 The human-in-the-loop evaluation confirmed that older adults ($N=19$, Age $\geq 65$) could operate the multimodal interface with low perceived complexity, temporal demand, and frustration. Qualitative feedback identified system latency (average 7.1 seconds) and occasional microphone failures as the primary sources of residual friction.
 
 \section{Contribution to Knowledge}
-
-% SOURCE: Phase 2 Conclusion §6.3, expanded to include Phase 1 contribution
 
 Situated within Gregor and Hevner's \citep{gregorNatureTheoryInformation2006} Knowledge Contribution Framework, this research constitutes an \textbf{Improvement}: a new solution to a known problem.
 
@@ -50,9 +31,6 @@ The thesis makes four specific contributions:
 
     \item \textbf{An evidence gap map of AI in geriatric nutrition} (Figure~\ref{fig:evidence-gap-map}) that systematically charts the translational landscape across application domains, study settings, and system maturity levels, providing a reusable methodological framework for identifying research priorities in emerging health informatics fields.
 \end{enumerate}
-
-% The fourth contribution is NEW --- derived from Phase 1.
-%      [CORE NOVELTY: Evidence Gap Map methodology]
 
 \section{Limitations and Future Work}
 
@@ -77,12 +55,3 @@ The ``Snap and Say'' source code repository is archived at \url{https://github.c
 \end{enumerate}
 
 Due to the constraints of the informed consent framework under which the study was conducted, the raw clinical interview transcripts and raw multimodal captures from the human-in-the-loop Phase 2 trials ($N=19$) are not publicly archived, but may be made available upon reasonable request to the corresponding institutions.
-
-% MERGE ANNOTATIONS SUMMARY FOR CH 7:
-%      - Phase 2 Conclusion preserved as primary fabric
-%      - Section 7.1 expanded: now summarises both phases (was Phase 2 only)
-%      - Section 7.2 expanded: Phase 1 key findings integrated before artifact findings
-%      - Section 7.3 expanded: Fourth contribution added (Phase 1's evidence gap map)
-%      - Section 7.4 expanded: Phase 1 methodological limitations included
-%      - Section 7.5 preserved verbatim --- sacred fabric, strong closing
-%      - No Phase 2 content deleted

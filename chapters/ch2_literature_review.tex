@@ -1,17 +1,3 @@
-% Chapter 2: Literature Review --- Scoping Review of AI in Geriatric Nutrition
-%
-% MERGE NOTE: This chapter IS Phase 1, lightly edited for framing.
-%      Phase 1 is publication-ready, supervisor-approved content --- sacred fabric.
-%      Changes are minimal and surgical:
-%      1. Phase 1's Introduction is shortened (background moved to Ch 1)
-%      2. Phase 1's 7 RQs are presented here as the review's guiding questions
-%      3. Methods, Results, Discussion preserved nearly verbatim
-%      4. NEW section 2.5 (Implications for System Design) added as bridging content (BR step)
-%      5. Phase 1's Conclusion absorbed into Discussion of Review Findings
-
-% [TONE HARMONIZED: Chapter-opening transition inserted --- positions review as evidence
-%      base for the thesis's design argument, not as a standalone publication.]
-
 The first phase of this research establishes the empirical foundation upon which the subsequent artifact design rests. By systematically mapping the translational landscape of AI in geriatric nutrition, this scoping review identifies the specific gaps, limitations, and opportunities that define the problem space --- and, critically, derives the design requirements that the Snap and Say artifact must satisfy.
 
 \section{Introduction}
@@ -34,9 +20,6 @@ A scoping review methodology was selected as it is designed to map the extent, r
 
 \section{Methods}
 
-% SOURCE: Phase 1 Methods, verbatim. Sacred fabric --- no changes.
-%      [TECHNICAL PRESERVATION: PRISMA-ScR methodology is the contribution]
-
 This scoping review was designed and reported in accordance with the Preferred Reporting Items for Systematic reviews and Meta-Analysis extension for Scoping Reviews (PRISMA-ScR) checklist \citep{pollockRecommendationsExtractionAnalysis2023}.
 
 The protocol was developed a priori. It was registered with the Open Science Framework (OSF) on October 2, 2025, and can be accessed at \url{https://osf.io/c9pg5}. No amendments to the protocol have been made since its registration. All supplementary files, including the full data extraction table, are available at this registration.
@@ -55,22 +38,9 @@ A search was conducted across MEDLINE (via PubMed), Scopus, Web of Science, IEEE
 
 To enhance comprehensiveness, Google Gemini 2.5 Pro was utilised to generate synonyms, alternative phrases, and subject headings. The research team reviewed, validated, and refined AI-generated suggestions before their incorporation into the final search strings.
 
-% [TRANSLATED --- annotation only, sacred fabric preserved]
-%      Google Gemini 2.5 Pro: a large language model used as a research assistance tool for
-%      search strategy development. Vehicle for the review methodology, not the contribution.
-%      No text change applied --- Phase 1 is publication-ready.
-
 Unique records were exported to ASReview systematic review software \citep{vandeschootOpenSourceMachine2021} for screening. A single reviewer (F.W.N.S.) conducted a two-stage screening process. Two verification steps were integrated: (1) sources of uncertain eligibility were discussed with the supervisory team (Y.B., B.T.) to reach consensus, and (2) a second reviewer (B.T.) independently assessed a random $20\%$ sample of excluded full-text articles.
 
-% [TRANSLATED --- annotation only, sacred fabric preserved]
-%      ASReview: an open-source machine learning-assisted screening tool for systematic reviews.
-%      Vehicle for the screening process. Properly cited. No text change applied.
-
 A data charting form, developed in Google Forms, was piloted on five studies and refined with feedback from the supervisory team. The primary reviewer charted all data. For quality assurance, a second reviewer (Y.B.) independently verified a random $20\%$ subset of the charted data against the full-text articles.
-
-% [TRANSLATED --- annotation only, sacred fabric preserved]
-%      Google Forms: a cloud-based form builder used for data charting. Vehicle for data collection.
-%      No text change applied --- the choice of charting tool is methodological transparency.
 
 The following data items were extracted: publication details, study characteristics, population characteristics, AI details, system and data characteristics (input data modality, dataset availability, computational features, system stage of deployment), nutrition application, evaluation and findings, identified challenges or limitations, and proposed solutions or future directions.
 
@@ -78,10 +48,6 @@ A meta-analysis was not conducted due to heterogeneity. Instead, a narrative syn
 
 \section{Results}
 \label{sec:results}
-
-% SOURCE: Phase 1 Results, verbatim. Sacred fabric.
-%      All figure and table references retained with updated numbering for consolidated thesis.
-%      [CORE NOVELTY: Evidence Gap Map methodology]
 
 The selection process filtered 587 initial records down to 25 included studies based on strict age and empirical evaluation criteria, as illustrated in Figure~\ref{fig:prisma-flow}. Appendix~\ref{app:included-studies} provides a comprehensive characterisation of these 25 systems.
 
@@ -143,9 +109,6 @@ Data availability remained a significant limitation. Only four studies ($16\%$) 
 
 A defining feature of the reviewed literature is its nascent nature. $92\%$ of systems were either prototypes ($n=11$) or undergoing pilot testing ($n=12$). Only two systems had advanced beyond this preliminary phase. Figure~\ref{fig:evidence-gap-map} presents the full distribution of studies across application goals, study settings, and system maturity levels.
 
-% [CORE NOVELTY: Evidence Gap Map methodology --- the visualization of
-%      application goals x study settings x maturity is a methodological contribution]
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{5_evidence_gap_map.pdf}
@@ -155,11 +118,6 @@ A defining feature of the reviewed literature is its nascent nature. $92\%$ of s
 
 \section{Discussion of Review Findings}
 \label{sec:discussion-review}
-
-% SOURCE: Phase 1 Discussion + Phase 1 Conclusion (absorbed).
-%      [OVERLAP: Data quality challenges --- RECLASSIFIED as complementary to Phase 2 Discussion]
-%      Phase 1 discusses field-level challenges; Phase 2 Discussion (Ch 6) addresses system-specific
-%      limitations. Both retained in their respective locations.
 
 This scoping review of 25 studies indicates that AI in geriatric nutrition is a nascent field characterised by a gap between technological potential and real-world application. Research is concentrated on applications for behaviour change and recommendation ($n=11$) and dietary assessment and monitoring ($n=6$), accounting for $68\%$ of the included literature. The majority of systems ($n=23$, $92\%$) remain in prototype or pilot stages, with corresponding gaps in real-world validation and data availability.
 
@@ -188,10 +146,6 @@ AI applications in geriatric nutrition are in an early stage of development. Whi
 \section{Implications for System Design}
 \label{sec:implications}
 
-% BRIDGING SECTION --- expanded by BR step (2026-03-10).
-%      This is the primary gap-to-requirement mapping: the connective tissue
-%      between evidence (Phase 1) and design (Phase 2).
-
 The findings of this scoping review carry direct implications for the design of the artifact presented in the subsequent chapters. Rather than treating the review as an isolated academic exercise, this section traces explicit threads from the evidence synthesis to the design objectives that govern the artifact's architecture (Chapter~\ref{ch:methodology}). These threads constitute the thesis's central argumentative spine: every architectural decision in the artifact can be traced back to a gap or limitation identified in the reviewed literature.
 
 \subsection{From Translational Gap to Deployment-Conscious Architecture}
@@ -200,11 +154,6 @@ The findings of this scoping review carry direct implications for the design of 
 The review revealed that $92\%$ of systems remain at prototype or pilot stages (Section~\ref{sec:results}), with only two systems advancing beyond preliminary development \citep{dimartinoMalnutritionRiskAssessment2021,wangAreNutritionalLabeling2024}. This finding exposes a field-level failure to design for deployment. Systems that never leave the laboratory cannot generate the longitudinal evidence required to establish clinical validity.
 
 This gap directly motivated the artifact's architectural decisions: a cloud-native deployment model (progressive web application on an edge platform, asynchronous API server on a managed cloud host, encrypted relational database on a managed data platform), configurable per-session clinical parameters that can be adjusted without code changes (Objective 2, Section~\ref{sec:objectives}), and a streaming event architecture that provides real-time feedback to sustain user engagement during multi-stage processing. While the artifact itself remains a research prototype --- and this tension is acknowledged honestly in Section~\ref{sec:limitations} --- its architecture is designed to \emph{permit} deployment rather than \emph{preclude} it.
-
-% [TRANSLATED: "PWA on Vercel, API on Railway, managed database on Supabase" ->
-%      functional descriptions. Consistent with Ch 4 Noun-to-Capability translations.
-%      Brand names removed from bridging content (BR-step addition, not sacred fabric).
-%      Rationale: The deployment pattern is the contribution, not the specific platforms.]
 
 \subsection{From Usability Mismatch to Geriatric-Centric Design}
 
@@ -230,18 +179,4 @@ The review found that $84\%$ of studies relied on private, proprietary, or ``ava
 
 This finding motivated the decision to evaluate the artifact against the publicly available Nutrition5k dataset \citep{thamesNutrition5kAutomaticNutritional2021}. While the dataset has its own limitations (Western dietary bias, controlled photography conditions), its public availability ensures that the reported metrics ($22.8\%$ overall MAE reduction, $92\%$ TNR on Simple items) are independently verifiable and comparable to future work.
 
-% [BRIDGE ANNOTATION: Gap-to-Requirement Mapping Complete]
-
 The implications outlined above translate directly into the design objectives formalised in the following chapter. Where this chapter asked \emph{what does the field need?}, Chapter~\ref{ch:methodology} asks \emph{what must the artifact do?} --- and answers with six verifiable requirements derived from the evidence gaps documented here.
-
-% MERGE ANNOTATIONS SUMMARY FOR CH 2:
-%      - Phase 1 content preserved as sacred fabric with minimal framing edits
-%      - Phase 1 Introduction shortened (background moved to Ch 1)
-%      - Phase 1's 7 RQs presented in 2.1
-%      - Phase 1 Methods verbatim
-%      - Phase 1 Results: narrative preserved, some citation formatting consolidated
-%      - Phase 1 Discussion + Conclusion merged into 2.4
-%      - NEW section 2.5 added (skeletal --- BR step expanded)
-%      - No content deleted --- only relocated or forward-referenced
-%      - [OVERLAP: Aging background] --- resolved by moving to Ch 1
-%      - [OVERLAP: AI landscape] --- resolved by keeping in Ch 2 only
